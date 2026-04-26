@@ -9,20 +9,20 @@ import static com.raylib.Raylib.*;
 public class Button {
     private Rectangle rect;
     private Texture texture;
+    private boolean isHovered = false;
 
-    public Button(Rectangle rect, Texture texture) {
-        this.rect = rect;
+    public Button(Vector2 pos, Texture texture) {
+        this.rect = Helpers.newRectangle(pos.x(), pos.y(), texture.width(), texture.height());
         this.texture = texture;
     }
 
-    /**
-     * @param rect the size and position of the button
-     * @param text the text of the button
-     */
-    public Button(Rectangle rect, String text, Color textColor, Color backgroundColor) {
-        var img = GenImageColor((int) rect.width(), (int) rect.height(), backgroundColor);
-        ImageDrawText(img, text, 0, 0, 16, textColor);
-        this.rect = rect;
+    public Button(Vector2 pos, String text, int textSize, Color textColor, Color backgroundColor) {
+        int height = textSize + 8;
+        int width = MeasureText(text, textSize) + 8;
+
+        var img = GenImageColor(width, height, backgroundColor);
+        ImageDrawText(img, text, 4, 4, textSize, textColor);
+        this.rect = Helpers.newRectangle(pos.x(), pos.y(), width, height);
         this.texture = LoadTextureFromImage(img);
     }
 
@@ -32,12 +32,24 @@ public class Button {
      */
     public boolean update(Vector2 mousePos) {
         if (CheckCollisionPointRec(mousePos, rect)) {
+            isHovered = true;
             return IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+        } else {
+            isHovered = false;
+            return false;
         }
-        return false;
     }
 
     public void draw() {
-        DrawTextureV(texture, Helpers.newVector2(rect.x(), rect.y()), Colors.WHITE);
+        float scale = 1;
+        float pos_adjustment = 0;
+        if (isHovered) {
+            scale = 1.1F;
+            pos_adjustment = (scale - 1) / 2;
+        }
+        // Adjust the position of the button when getting bigger to stay centered
+        // Position is top left of the texture
+        Vector2 pos = Helpers.newVector2(rect.x() - (pos_adjustment * rect.width()), rect.y() - (pos_adjustment * rect.height()));
+        DrawTextureEx(texture, pos, 0, scale, Colors.WHITE);
     }
 }

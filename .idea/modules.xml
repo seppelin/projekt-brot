@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/rl-projekt-brot.iml" filepath="$PROJECT_DIR$/rl-projekt-brot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rl-projekt-brot.iml" filepath="$PROJECT_DIR$/rl-projekt-brot.iml" group="rl-projekt-brot" />
     </modules>
   </component>
 </project>
