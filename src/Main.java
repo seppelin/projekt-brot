@@ -1,18 +1,21 @@
 import scenes.MenuScene;
 import scenes.Scene;
 
+import static com.raylib.Colors.RAYWHITE;
 import static com.raylib.Raylib.*;
-import static com.raylib.Colors.*;
-import static com.raylib.Helpers.*;
+
+public static int SCREEN_WIDTH = 800;
+public static int SCREEN_HEIGHT = 600;
 
 void main() {
     SetTraceLogLevel(LOG_WARNING);
-    InitWindow(800, 450, "Demo");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo");
     SetTargetFPS(60);
+    SetExitKey(0);
 
     Scene scene = new MenuScene();
 
-    while (!WindowShouldClose()) {
+    while (!WindowShouldClose() && !scene.shouldQuit()) {
 
         // Update the scene and possible change it
         Scene sceneChange = scene.update();
