@@ -1,13 +1,16 @@
 package game;
 
+import com.raylib.Colors;
 import com.raylib.Helpers;
-import com.raylib.Raylib.*;
+import static com.raylib.Raylib.*;
 
 public class Player {
     private Camera2D camera;
     private Vector2 position;
+    private Vector2 velocity;
 
     public Player(int startX, int startY) {
+        velocity = Helpers.newVector2(0, 0);
         // Position of the player in pixel, 16px one field
         position = Helpers.newVector2(startX * 16, startY * 16);
 
@@ -17,7 +20,7 @@ public class Player {
         var target = position;
 
         // Setting the rotation to 0 and the zoom to 1
-        camera = Helpers.newCamera2D(offset, target, 0, 1);
+        camera = Helpers.newCamera2D(offset, target, 0, 4);
     }
 
     public Vector2 getPosition() {
@@ -30,11 +33,28 @@ public class Player {
         return camera;
     }
 
-    public void update() {
+    public void handleInput() {
+        velocity = Helpers.newVector2(0, 0);
         // Todo: handle input of player
+        if (IsKeyDown(KEY_W)) {
+            velocity.y(-1);
+        } if (IsKeyDown(KEY_S)) {
+            velocity.y(1);
+        } if  (IsKeyDown(KEY_A)) {
+            velocity.x(-1);
+        } if (IsKeyDown(KEY_D)) {
+            velocity.x(1);
+        }
+        velocity = Vector2Normalize(velocity);
+        velocity = Vector2Scale(velocity, 1);
+    }
+
+    public void update() {
+        position = Vector2Add(position, velocity);
     }
 
     public void draw() {
         // Todo: draw the player
+        DrawCircle((int) position.x(), (int) position.y(), 5, Colors.BLACK);
     }
 }

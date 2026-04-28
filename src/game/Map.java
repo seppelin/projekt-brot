@@ -39,6 +39,7 @@ public class Map {
     }
 
     public void update() {
+        p.handleInput();
         p.update();
     }
 
