@@ -1,4 +1,4 @@
-package scenes;
+package src.scenes;
 
 public abstract class Scene {
     private boolean quit = false;

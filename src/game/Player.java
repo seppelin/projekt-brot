@@ -1,4 +1,4 @@
-package game;
+package src.game;
 
 import com.raylib.Colors;
 import com.raylib.Helpers;
@@ -55,6 +55,6 @@ public class Player {
 
     public void draw() {
         // Todo: draw the player
-        DrawCircle((int) position.x(), (int) position.y(), 5, Colors.BLACK);
+        DrawCircleV(position, 5, Colors.BLACK);
     }
 }

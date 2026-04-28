@@ -1,6 +1,6 @@
-package scenes;
+package src.scenes;
 
-import game.Map;
+import src.game.Map;
 
 public class PlayScene extends Scene {
     Map map;

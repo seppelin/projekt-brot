@@ -1,9 +1,9 @@
-package scenes;
+package src.scenes;
 
 import com.raylib.Colors;
 import com.raylib.Helpers;
 import com.raylib.Raylib;
-import ui.Button;
+import src.ui.Button;
 
 public class MenuScene extends Scene {
     private Button play;

@@ -1,4 +1,4 @@
-package scenes;
+package src.scenes;
 
 // Todo: make a simple editor for the map
 

@@ -1,5 +1,7 @@
-import scenes.MenuScene;
-import scenes.Scene;
+package src;
+
+import src.scenes.MenuScene;
+import src.scenes.Scene;
 
 import static com.raylib.Colors.RAYWHITE;
 import static com.raylib.Raylib.*;
@@ -9,7 +11,7 @@ class Main {
     public static int SCREEN_WIDTH = 800;
     public static int SCREEN_HEIGHT = 600;
 
-    public static void main(String[] args) {
+    public static void main() {
         SetTraceLogLevel(LOG_WARNING);
         InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo");
         SetTargetFPS(60);
