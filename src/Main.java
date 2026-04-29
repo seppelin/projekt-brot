@@ -11,7 +11,7 @@ class Main {
     public static int SCREEN_WIDTH = 800;
     public static int SCREEN_HEIGHT = 600;
 
-    public static void main() {
+    public static void main(String[] args) {
         SetTraceLogLevel(LOG_WARNING);
         InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo");
         SetTargetFPS(60);
