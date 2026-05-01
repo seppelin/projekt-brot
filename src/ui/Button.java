@@ -2,14 +2,15 @@ package src.ui;
 
 import com.raylib.Colors;
 import com.raylib.Helpers;
+import com.raylib.Raylib;
 
 import static com.raylib.Raylib.*;
 
-
-public class Button {
-    private Rectangle rect;
-    private Texture texture;
+public class Button implements UiElement {
+    private final Rectangle rect;
+    private final Texture texture;
     private boolean isHovered = false;
+    private boolean isClicked = false;
 
     public Button(Vector2 pos, Texture texture) {
         this.rect = Helpers.newRectangle(pos.x(), pos.y(), texture.width(), texture.height());
@@ -26,20 +27,19 @@ public class Button {
         this.texture = LoadTextureFromImage(img);
     }
 
-    /**
-     * @param mousePos Screen position of the mouse
-     * @return whether button is clicked
-     */
-    public boolean update(Vector2 mousePos) {
+    @Override
+    public void update() {
+        var mousePos = Raylib.GetMousePosition();
         if (CheckCollisionPointRec(mousePos, rect)) {
             isHovered = true;
-            return IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+            isClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
         } else {
             isHovered = false;
-            return false;
+            isClicked = false;
         }
     }
 
+    @Override
     public void draw() {
         float scale = 1;
         float pos_adjustment = 0;
@@ -51,5 +51,9 @@ public class Button {
         // Position is top left of the texture
         Vector2 pos = Helpers.newVector2(rect.x() - (pos_adjustment * rect.width()), rect.y() - (pos_adjustment * rect.height()));
         DrawTextureEx(texture, pos, 0, scale, Colors.WHITE);
+    }
+
+    public boolean isClicked() {
+        return isClicked;
     }
 }

@@ -2,32 +2,41 @@ package src.scenes;
 
 import com.raylib.Colors;
 import com.raylib.Helpers;
-import com.raylib.Raylib;
 import src.ui.Button;
 
-public class MenuScene extends Scene {
-    private Button play;
-    private Button exit;
+public class MenuScene implements Scene {
+    Button playButton;
+    Button editButton;
+    Button exitButton;
 
     public MenuScene() {
-        play = new Button(Helpers.newVector2(20, 20), "Play", 32,Colors.BLACK, Colors.BLANK);
-        exit = new Button(Helpers.newVector2(20, 50), "Exit", 32,Colors.BLACK, Colors.BLANK);
+        playButton = new Button(Helpers.newVector2(20, 20), "Play", 32,Colors.BLACK, Colors.BLANK);
+        editButton = new Button(Helpers.newVector2(20, 60), "Edit", 32,Colors.BLACK, Colors.BLANK);
+        exitButton = new Button(Helpers.newVector2(20, 100), "Exit", 32,Colors.BLACK, Colors.BLANK);
     }
 
     @Override
-    public Scene update() {
-        if (play.update(Raylib.GetMousePosition())) {
-            return new PlayScene();
+    public void setup(SceneManager sceneManager) {
+        sceneManager.addUiElement(playButton);
+        sceneManager.addUiElement(editButton);
+        sceneManager.addUiElement(exitButton);
+    }
+
+    @Override
+    public void update(SceneManager sm) {
+        if (playButton.isClicked()) {
+            sm.changeScene(new PlayScene());
         }
 
-        // If exit button is pressed, app quits
-        setQuit(exit.update(Raylib.GetMousePosition()));
-        return null;
+        if (editButton.isClicked()) {
+            sm.changeScene(new EditScene());
+        }
+
+        if (exitButton.isClicked()) {
+            sm.quitGame();
+        }
     }
 
     @Override
-    public void draw() {
-        play.draw();
-        exit.draw();
-    }
+    public void draw() {}
 }

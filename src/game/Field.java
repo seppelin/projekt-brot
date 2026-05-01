@@ -1,6 +1,8 @@
 package src.game;
 
-public class Field {
+import java.io.Serializable;
+
+public class Field implements Serializable {
     FieldType type;
     public Field(FieldType type) {
         this.type = type;

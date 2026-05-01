@@ -3,7 +3,20 @@ package src.game;
 
 import com.raylib.Raylib;
 
-public record FieldType(String name, boolean walkable, Raylib.Texture texture) {
-    public static FieldType GRASS = new FieldType("grass", true, Raylib.LoadTexture("resources/grass.png"));
-    public static FieldType WATER = new FieldType("grass", false, Raylib.LoadTexture("resources/water.png"));
+public enum FieldType {
+    GRASS(0, "grass", true, "resources/grass.png"),
+    WATER(1, "water", false, "resources/water.png");
+
+    public final int id;
+    public final String name;
+    public final boolean walkable;
+    public final Raylib.Texture texture;
+
+    FieldType(int id, String name, boolean walkable, String path) {
+        this.id = id;
+        this.name = name;
+        this.walkable = walkable;
+        // This only loads once when the game starts
+        this.texture = Raylib.LoadTexture(path);
+    }
 }

@@ -1,9 +1,8 @@
 package src;
 
 import src.scenes.MenuScene;
-import src.scenes.Scene;
+import src.scenes.SceneManager;
 
-import static com.raylib.Colors.RAYWHITE;
 import static com.raylib.Raylib.*;
 
 
@@ -13,27 +12,15 @@ class Main {
 
     public static void main(String[] args) {
         SetTraceLogLevel(LOG_WARNING);
-        InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo");
         SetTargetFPS(60);
+        SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+
+        InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo");
+
         SetExitKey(0);
 
-        Scene scene = new MenuScene();
+        SceneManager.startGame(new MenuScene());
 
-        while (!WindowShouldClose() && !scene.shouldQuit()) {
-
-            // Update the scene and possible change it
-            Scene sceneChange = scene.update();
-            if (sceneChange != null) {
-                scene = sceneChange;
-            }
-
-
-            // Draw the scene
-            BeginDrawing();
-            ClearBackground(RAYWHITE);
-            scene.draw();
-            EndDrawing();
-        }
         CloseWindow();
     }
 }

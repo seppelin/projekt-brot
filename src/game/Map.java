@@ -1,14 +1,17 @@
 package src.game;
 
 import com.raylib.Colors;
+import com.raylib.Helpers;
+import src.scenes.SceneManager;
+import src.ui.Button;
+
+import java.io.*;
 
 import static com.raylib.Raylib.*;
 
-public class Map {
+public class Map implements Serializable {
     private final int width;
     private final int height;
-
-    private Player p;
 
     private Field[][] fields;
 
@@ -22,8 +25,6 @@ public class Map {
                 fields[x][y] = new Field(FieldType.GRASS);
             }
         }
-
-        this.p = new Player(10, 10);
     }
 
     public Field getField(int x, int y) {
@@ -38,19 +39,13 @@ public class Map {
         return height;
     }
 
-    public void update() {
-        p.handleInput();
-        p.update();
-    }
+    public void update() {}
 
     public void draw() {
-        BeginMode2D(p.getCamera());
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                DrawTexture(getField(x, y).type.texture(), x*16, y*16, Colors.WHITE);
+                DrawTexture(getField(x, y).type.texture, x*16, y*16, Colors.WHITE);
             }
         }
-        p.draw();
-        EndMode2D();
     }
 }
