@@ -4,7 +4,10 @@ package src.game;
 import com.raylib.Raylib;
 import src.ui.SelectorItem;
 
-public enum FieldType implements SelectorItem {
+import java.io.Serial;
+import java.io.Serializable;
+
+public enum FieldType implements SelectorItem, Serializable {
     GRASS(0, "grass", true, "resources/grass.png"),
     WATER(1, "water", false, "resources/water.png");
 

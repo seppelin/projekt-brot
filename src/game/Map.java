@@ -11,6 +11,9 @@ import java.io.*;
 import static com.raylib.Raylib.*;
 
 public class Map implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final int width;
     private final int height;
 
