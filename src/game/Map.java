@@ -81,6 +81,9 @@ public class Map implements Serializable {
                     }
                     var x = fieldX + offsetX - ringSize;
                     var y = fieldY + offsetY - ringSize;
+                    if (x >= width || y >= width || x < 0 || y < 0) {
+                        continue;
+                    }
                     var xPos = x*16;
                     var yPos = y*16;
                     if (getField(x, y).isWalkable()) {
