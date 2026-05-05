@@ -38,6 +38,8 @@ public class Player {
     public void update() {
         handleInput();
         position = Vector2Add(position, velocity);
+        System.out.println(position.x() + ", " + position.y());
+        position = Vector2Clamp(position, new Vector2().x(0).y(0), new Vector2().x(16*20).y(16*20));
     }
 
     public void draw() {
