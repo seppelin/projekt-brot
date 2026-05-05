@@ -7,4 +7,8 @@ public class Field implements Serializable {
     public Field(FieldType type) {
         this.type = type;
     }
+
+    public boolean isWalkable() {
+        return this.type.walkable;
+    }
 }

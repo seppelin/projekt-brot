@@ -1,6 +1,6 @@
 package src.ui;
 
 public interface UiElement {
-    void update();
+    void update(InputHandle inputHandle);
     void draw();
 }

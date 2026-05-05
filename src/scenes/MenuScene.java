@@ -3,6 +3,7 @@ package src.scenes;
 import com.raylib.Colors;
 import com.raylib.Helpers;
 import src.ui.Button;
+import src.ui.InputHandle;
 
 public class MenuScene implements Scene {
     Button playButton;
@@ -23,7 +24,7 @@ public class MenuScene implements Scene {
     }
 
     @Override
-    public void update(SceneManager sm) {
+    public void update(SceneManager sm, InputHandle inputHandle) {
         if (playButton.isClicked()) {
             sm.changeScene(new PlayScene());
         }

@@ -27,11 +27,13 @@ public class Button implements UiElement {
     }
 
     @Override
-    public void update() {
+    public void update(InputHandle inputHandle) {
         var mousePos = Raylib.GetMousePosition();
         if (CheckCollisionPointRec(mousePos, rect)) {
             isHovered = true;
-            isClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && inputHandle.tryTakeMouse()) {
+                isClicked = true;
+            }
         } else {
             isHovered = false;
             isClicked = false;

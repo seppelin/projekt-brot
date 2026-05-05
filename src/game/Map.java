@@ -4,6 +4,7 @@ import com.raylib.Colors;
 import com.raylib.Helpers;
 import src.scenes.SceneManager;
 import src.ui.Button;
+import src.ui.InputHandle;
 
 import java.io.*;
 
@@ -39,7 +40,22 @@ public class Map implements Serializable {
         return height;
     }
 
-    public void update() {}
+    public void update() {
+
+    }
+
+    public void updateEdits(InputHandle inputHandle, FieldType selected, Camera camera) {
+        var worldMousePos = GetScreenToWorld2D(GetMousePosition(),  camera);
+        if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x*16, y*16, 16, 16)) && inputHandle.tryTakeMouse()) {
+                        getField(x, y).type = selected;
+                    }
+                }
+            }
+        }
+    }
 
     public void draw() {
         for (int x = 0; x < width; x++) {

@@ -2,6 +2,7 @@ package src.scenes;
 
 import com.raylib.Colors;
 import com.raylib.Raylib;
+import src.ui.InputHandle;
 import src.ui.UiElement;
 
 import java.util.Vector;
@@ -33,11 +34,16 @@ public class SceneManager {
     }
 
     private void update() {
+        if (Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
+            changeScene(new MenuScene());
+            return;
+        }
+        InputHandle ih = new InputHandle();
         // Ui before the rest since on top
         for (UiElement uiElement : uiElements) {
-            uiElement.update();
+            uiElement.update(ih);
         }
-        scene.update(this);
+        scene.update(this, ih);
     }
 
     private void draw() {

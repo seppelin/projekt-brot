@@ -2,6 +2,7 @@ package src.scenes;
 
 import com.raylib.Helpers;
 import com.raylib.Raylib;
+import src.ui.InputHandle;
 
 public class SaveScene implements Scene {
     @Override
@@ -10,7 +11,7 @@ public class SaveScene implements Scene {
     }
 
     @Override
-    public void update(SceneManager sceneManager) {
+    public void update(SceneManager sceneManager, InputHandle inputHandle) {
 
     }
 

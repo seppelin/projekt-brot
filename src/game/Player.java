@@ -2,6 +2,7 @@ package src.game;
 
 import com.raylib.Colors;
 import com.raylib.Helpers;
+import src.ui.InputHandle;
 
 import static com.raylib.Raylib.*;
 
@@ -35,8 +36,10 @@ public class Player {
         velocity = Vector2Scale(velocity, 1);
     }
 
-    public void update() {
-        handleInput();
+    public void update(InputHandle inputHandle) {
+        if (inputHandle.tryTakeKeyBoard()) {
+            handleInput();
+        }
         position = Vector2Add(position, velocity);
         position = Vector2Clamp(position, new Vector2().x(0).y(0), new Vector2().x(16*20).y(16*20));
     }

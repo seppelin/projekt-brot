@@ -21,7 +21,7 @@ public enum FieldType implements SelectorItem {
         this.texture = Raylib.LoadTexture(path);
     }
 
-    FieldType getById(int id) {
+    public static FieldType getById(int id) {
         for (FieldType type : FieldType.values()) {
             if (type.id == id) {
                 return type;

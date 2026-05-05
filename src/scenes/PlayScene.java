@@ -1,12 +1,15 @@
 package src.scenes;
 
-import com.raylib.Colors;
-import com.raylib.Helpers;
 import com.raylib.Raylib;
 import src.game.Camera;
 import src.game.Map;
 import src.game.Player;
-import src.ui.Button;
+import src.ui.InputHandle;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 
 public class PlayScene implements Scene {
     Camera camera;
@@ -14,7 +17,11 @@ public class PlayScene implements Scene {
     Map map;
 
     public PlayScene() {
-        this.map = new Map(20, 20);
+        try (var in = new ObjectInputStream(new FileInputStream("map.savefile"))) {
+            this.map = (Map) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         this.player = new Player(map.getWidth()/2, map.getHeight()/2);
         this.camera = new Camera(160, 160, 4);
     }
@@ -23,12 +30,12 @@ public class PlayScene implements Scene {
     public void setup(SceneManager sceneManager) {}
 
     @Override
-    public void update(SceneManager sm) {
+    public void update(SceneManager sm, InputHandle inputHandle) {
         map.update();
-        player.update();
+        player.update(inputHandle);
         camera.target(player.getPosition());
         camera.handleResize();
-        camera.scrollZoom();
+        camera.scrollZoom(inputHandle);
         // Todo: go back to menu scene when ESC pressed
     }
 
