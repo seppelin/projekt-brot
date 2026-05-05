@@ -35,7 +35,11 @@ public class SceneManager {
 
     private void update() {
         if (Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
-            changeScene(new MenuScene());
+            if (scene instanceof MenuScene) {
+                quitGame();
+            } else {
+                changeScene(new MenuScene());
+            }
             return;
         }
         InputHandle ih = new InputHandle();
