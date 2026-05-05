@@ -67,4 +67,36 @@ public class Map implements Serializable {
             }
         }
     }
+
+    public Vector2 nearestValidPosition(Vector2 point) {
+        int fieldX = (int) (point.x() / 16);
+        int fieldY = (int) (point.y() / 16);
+        for (int ringSize = 0; ringSize < 5;  ringSize++) {
+            float distance = 10000;
+            Vector2 validPos = null;
+            for (int offsetX = 0; offsetX <= 2*ringSize; offsetX++) {
+                for (int offsetY = 0; offsetY <= 2*ringSize; offsetY++) {
+                    if (offsetX != 0 && offsetX != 2*ringSize && offsetY != 0 && offsetY != 2*ringSize) {
+                        continue;
+                    }
+                    var x = fieldX + offsetX - ringSize;
+                    var y = fieldY + offsetY - ringSize;
+                    var xPos = x*16;
+                    var yPos = y*16;
+                    if (getField(x, y).isWalkable()) {
+                        var nearestPoint = Vector2Clamp(point, Helpers.newVector2(xPos, yPos), Helpers.newVector2(xPos+16, yPos+16));
+                        var newDistance = Vector2Distance(nearestPoint, point);
+                        if (distance > newDistance) {
+                            validPos = nearestPoint;
+                            distance = newDistance;
+                        }
+                    }
+                }
+            }
+            if (validPos != null) {
+                return validPos;
+            }
+        }
+        return point;
+    }
 }

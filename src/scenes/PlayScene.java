@@ -32,7 +32,7 @@ public class PlayScene implements Scene {
     @Override
     public void update(SceneManager sm, InputHandle inputHandle) {
         map.update();
-        player.update(inputHandle);
+        player.update(inputHandle, this.map);
         camera.target(player.getPosition());
         camera.handleResize();
         camera.scrollZoom(inputHandle);
