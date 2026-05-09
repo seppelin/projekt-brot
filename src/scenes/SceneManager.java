@@ -2,12 +2,12 @@ package src.scenes;
 
 import com.raylib.Colors;
 import com.raylib.Raylib;
+import java.util.Vector;
 import src.ui.InputHandle;
 import src.ui.UiElement;
 
-import java.util.Vector;
-
 public class SceneManager {
+
     private final Vector<UiElement> uiElements;
     private Scene scene;
     private boolean quit;
@@ -35,7 +35,11 @@ public class SceneManager {
 
     private void update() {
         if (Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
-            changeScene(new MenuScene());
+            if (scene instanceof MenuScene) {
+                quitGame();
+            } else {
+                changeScene(new MenuScene());
+            }
             return;
         }
         InputHandle ih = new InputHandle();

@@ -5,8 +5,8 @@ import src.scenes.SceneManager;
 
 import static com.raylib.Raylib.*;
 
+public class Main {
 
-class Main {
     public static void main(String[] args) {
         SetTraceLogLevel(LOG_WARNING);
         SetTargetFPS(60);
