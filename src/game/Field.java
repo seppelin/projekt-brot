@@ -15,4 +15,8 @@ public class Field implements Serializable {
     public boolean isWalkable() {
         return this.type.walkable;
     }
+    
+    public void setType(FieldType type) {
+        this.type = type;
+    }
 }

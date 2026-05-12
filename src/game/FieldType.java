@@ -2,6 +2,7 @@ package src.game;
 
 
 import com.raylib.Raylib;
+import com.raylib.Colors;
 import src.ui.SelectorItem;
 
 import java.io.Serial;
@@ -9,19 +10,26 @@ import java.io.Serializable;
 
 public enum FieldType implements SelectorItem, Serializable {
     GRASS(0, "grass", true, "resources/grass.png"),
-    WATER(1, "water", false, "resources/water.png");
+    WATER(1, "water", false, "resources/water.png"),
+    VOID(2, "void", false, ""),
+    GRASSDARK(3, "darkgrass", true, "resources/grasdunkel.png");
 
     public final int id;
     public final String name;
     public final boolean walkable;
-    public final Raylib.Texture texture;
+    private final Raylib.Texture texture;
 
     FieldType(int id, String name, boolean walkable, String path) {
         this.id = id;
         this.name = name;
         this.walkable = walkable;
         // This only loads once when the game starts
-        this.texture = Raylib.LoadTexture(path);
+        if (path.isEmpty()) {
+            var img = Raylib.GenImageColor(16, 16, Colors.BLANK);
+            this.texture = Raylib.LoadTextureFromImage(img);
+        } else {
+            this.texture = Raylib.LoadTexture(path);
+        }
     }
 
     public static FieldType getById(int id) {
@@ -31,6 +39,12 @@ public enum FieldType implements SelectorItem, Serializable {
             }
         }
         return null;
+    }
+    
+    public void draw(int x, int y) {
+        if (texture != null) {
+            Raylib.DrawTexture(texture, x, y, Colors.WHITE);
+        }
     }
 
     @Override

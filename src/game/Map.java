@@ -63,7 +63,7 @@ public class Map implements Serializable {
     public void draw() {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                DrawTexture(getField(x, y).type.texture, x*16, y*16, Colors.WHITE);
+                getField(x, y).type.draw(x*16, y*16);
             }
         }
     }
@@ -71,7 +71,7 @@ public class Map implements Serializable {
     public Vector2 nearestValidPosition(Vector2 point) {
         int fieldX = (int) (point.x() / 16);
         int fieldY = (int) (point.y() / 16);
-        for (int ringSize = 0; ringSize < 5;  ringSize++) {
+        for (int ringSize = 0; ringSize < this.width;  ringSize++) {
             float distance = 10000;
             Vector2 validPos = null;
             for (int offsetX = 0; offsetX <= 2*ringSize; offsetX++) {
