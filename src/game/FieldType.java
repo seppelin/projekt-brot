@@ -1,15 +1,16 @@
 package src.game;
 
 
+import com.raylib.Colors;
 import com.raylib.Raylib;
 import src.ui.SelectorItem;
 
-import java.io.Serial;
 import java.io.Serializable;
 
 public enum FieldType implements SelectorItem, Serializable {
     GRASS(0, "grass", true, "resources/grass.png"),
-    WATER(1, "water", false, "resources/water.png");
+    WATER(1, "water", false, "resources/water.png"),
+    VOID(2, "void", false, "");
 
     public final int id;
     public final String name;
@@ -21,7 +22,12 @@ public enum FieldType implements SelectorItem, Serializable {
         this.name = name;
         this.walkable = walkable;
         // This only loads once when the game starts
-        this.texture = Raylib.LoadTexture(path);
+        if (path.isEmpty()) {
+            var img = Raylib.GenImageColor(16, 16, Colors.BLANK);
+            texture = Raylib.LoadTextureFromImage(img);
+        } else {
+            texture = Raylib.LoadTexture(path);
+        }
     }
 
     public static FieldType getById(int id) {

@@ -8,9 +8,7 @@ import com.raylib.Raylib;
 import src.game.Camera;
 import src.game.FieldType;
 import src.game.Map;
-import src.ui.Button;
-import src.ui.InputHandle;
-import src.ui.Selector;
+import src.ui.*;
 
 import java.io.*;
 
@@ -22,7 +20,7 @@ public class EditScene implements Scene {
     Button loadButton;
 
     public EditScene() {
-        this.selector = new Selector(Helpers.newVector2(500, 10), 2, FieldType.values(), 2);
+        this.selector = new Selector(Helpers.newVector2(500, 10), 6, FieldType.values(), 2);
         this.camera = new Camera(160, 160, 2);
         this.map = new Map(20, 20);
         this.saveButton = new Button(Helpers.newVector2(10, 10), "save", 28, Colors.BLACK, Colors.BLANK);
@@ -34,6 +32,11 @@ public class EditScene implements Scene {
         sceneManager.addUiElement(saveButton);
         sceneManager.addUiElement(loadButton);
         sceneManager.addUiElement(selector);
+        var layout = new LayoutAlign(0, Align.Start);
+        sceneManager.setRootLayout(layout);
+        layout.set(saveButton, Align.Start);
+        layout.set(loadButton, Align.Middle);
+        layout.set(selector, Align.End);
     }
 
     @Override

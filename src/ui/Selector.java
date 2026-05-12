@@ -4,9 +4,8 @@ import com.raylib.Colors;
 import com.raylib.Helpers;
 import com.raylib.Raylib;
 
-public class Selector implements UiElement {
+public class Selector implements UiElement, LayoutElement {
     static Raylib.Texture outlineTexture;
-    static Raylib.Texture selectedTexture;
 
     Raylib.Vector2 pos;
     int itemsPerRow;
@@ -17,11 +16,6 @@ public class Selector implements UiElement {
     float scale;
 
     public Selector(Raylib.Vector2 pos, int itemsPerRow, SelectorItem[] items, float scale) {
-        if (selectedTexture == null) {
-            var img = Raylib.GenImageColor(16, 16, Colors.BLANK);
-            Raylib.ImageDrawRectangleLines(img, Helpers.newRectangle(1, 1, 14, 14), 1, Colors.YELLOW);
-            selectedTexture = Raylib.LoadTextureFromImage(img);
-        }
         if (outlineTexture == null) {
             var img = Raylib.GenImageColor(16, 16, Colors.BLANK);
             Raylib.ImageDrawRectangleLines(img, Helpers.newRectangle(0, 0, 16, 16), 1, Colors.BLACK);
@@ -40,10 +34,18 @@ public class Selector implements UiElement {
         return items[selected].getId();
     }
 
-    private Raylib.Rectangle getBox(int i) {
+    private Raylib.Rectangle getLocalBox(int i) {
+
         var x = i % this.itemsPerRow;
         var y = i / this.itemsPerRow;
-        return Helpers.newRectangle(pos.x() + (x * 16 * 1.1F * scale), pos.y() + (y * 16 * 1.1F * scale), 16 * scale, 16 * scale);
+        return Helpers.newRectangle((x * 16 * 1.1F * scale), (y * 16 * 1.1F * scale), 16 * scale, 16 * scale);
+    }
+
+    private Raylib.Rectangle getBox(int i) {
+        var rect = getLocalBox(i);
+        rect.x(rect.x() + this.pos.x());
+        rect.y(rect.y() + this.pos.y());
+        return rect;
     }
 
     @Override
@@ -68,8 +70,33 @@ public class Selector implements UiElement {
             var rect = getBox(i);
             float hoverScale = hovered == i ? .1f : 0f;
             var tint = this.selected == i ? Colors.WHITE : Colors.GRAY;
-            UiHelper.drawTextureScale(rect, items[i].getTexture(), this.scale , hoverScale, tint);
-            UiHelper.drawTextureScale(rect, outlineTexture, this.scale,  hoverScale, Colors.WHITE);
+            UiHelper.drawTextureScale(rect, items[i].getTexture(), this.scale, hoverScale, tint);
+            UiHelper.drawTextureScale(rect, outlineTexture, this.scale, hoverScale, Colors.WHITE);
         }
+    }
+
+    @Override
+    public void debugDraw() {
+
+    }
+
+    @Override
+    public void setSpace(Raylib.Rectangle rect) {
+        this.pos.x(rect.x());
+        this.pos.y(rect.y());
+    }
+
+    @Override
+    public Raylib.Vector2 minimum() {
+        var x = getLocalBox(Math.min(itemsPerRow - 1, items.length - 1));
+        var y = getLocalBox(items.length);
+        var width = x.x() + x.width();
+        var height = y.y() + y.height();
+        return Helpers.newVector2(width, height);
+    }
+
+    @Override
+    public Raylib.Vector2 variableSize() {
+        return new Raylib.Vector2();
     }
 }

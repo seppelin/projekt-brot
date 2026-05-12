@@ -1,13 +1,14 @@
 package src.ui;
 
+import com.raylib.Colors;
 import com.raylib.Helpers;
 import com.raylib.Raylib;
 
 import static com.raylib.Raylib.*;
 
-public class Button implements UiElement {
-    private final Rectangle rect;
+public class Button implements UiElement, LayoutElement {
     private final Texture texture;
+    private Rectangle rect;
     private boolean isHovered = false;
     private boolean isClicked = false;
 
@@ -47,5 +48,25 @@ public class Button implements UiElement {
 
     public boolean isClicked() {
         return isClicked;
+    }
+
+    @Override
+    public void debugDraw() {
+        DrawRectangleLinesEx(rect, 1, Colors.RED);
+    }
+
+    @Override
+    public void setSpace(Rectangle rect) {
+        this.rect = rect;
+    }
+
+    @Override
+    public Vector2 minimum() {
+        return Helpers.newVector2(rect.width(), rect.height());
+    }
+
+    @Override
+    public Vector2 variableSize() {
+        return new Vector2();
     }
 }
