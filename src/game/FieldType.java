@@ -5,12 +5,14 @@ import com.raylib.Colors;
 import com.raylib.Raylib;
 import src.ui.SelectorItem;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 public enum FieldType implements SelectorItem, Serializable {
     GRASS(0, "grass", true, "resources/grass.png"),
     WATER(1, "water", false, "resources/water.png"),
-    VOID(2, "void", false, "");
+    VOID(2, "void", false, ""),
+    GRASSDARK(3, "darkgrass", true, "resources/grasdunkel.png");
 
     public final int id;
     public final String name;
