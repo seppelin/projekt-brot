@@ -2,6 +2,7 @@ package src.game;
 
 import com.raylib.Helpers;
 import src.ui.InputHandle;
+import src.ui.SelItemInterface;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -45,13 +46,17 @@ public class Map implements Serializable {
 
     }
 
-    public void updateEdits(InputHandle inputHandle, FieldType selected, Camera camera) {
+    public void updateSelection(InputHandle inputHandle, SelItemInterface selected, Camera camera) {
         var worldMousePos = GetScreenToWorld2D(GetMousePosition(), camera);
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16)) && inputHandle.tryTakeMouse()) {
-                        getField(x, y).type = selected;
+                        if (selected instanceof FieldType) {
+                            getField(x, y).type = (FieldType) selected;
+                        } else {
+                            getField(x, y).setItem((ItemType)  selected);
+                        }
                     }
                 }
             }

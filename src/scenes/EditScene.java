@@ -61,14 +61,16 @@ public class EditScene implements SceneInterface {
                 throw new RuntimeException(e);
             }
         }
+        var sel = this.selector.getSelected();
         if (changeButton.isClicked()) {
-            this.selector.setItems(ItemType.values());
+            if (sel instanceof ItemType) {
+                this.selector.setItems(FieldType.values());
+            }   else {
+                this.selector.setItems(ItemType.values());
+            }
         }
 
-        var sel = this.selector.getSelected();
-        if (sel instanceof FieldType) {
-            map.updateEdits(inputHandle, (FieldType) sel, this.camera);
-        }
+        map.updateSelection(inputHandle, sel, this.camera);
 
         camera.handleResize();
         camera.mouseMove(inputHandle);
