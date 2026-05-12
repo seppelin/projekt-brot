@@ -1,19 +1,19 @@
 package src.scenes;
 
 import com.raylib.Colors;
-import com.raylib.Helpers;
+import src.math.Vector2I;
 import src.ui.Button;
 import src.ui.InputHandle;
 
-public class MenuScene implements Scene {
+public class MenuScene implements SceneInterface {
     Button playButton;
     Button editButton;
     Button exitButton;
 
     public MenuScene() {
-        playButton = new Button(Helpers.newVector2(20, 20), "Play", 32,Colors.BLACK, Colors.BLANK);
-        editButton = new Button(Helpers.newVector2(20, 60), "Edit", 32,Colors.BLACK, Colors.BLANK);
-        exitButton = new Button(Helpers.newVector2(20, 100), "Exit", 32,Colors.BLACK, Colors.BLANK);
+        playButton = new Button(new Vector2I(20, 20), "Play", 32, Colors.BLACK, Colors.BLANK);
+        editButton = new Button(new Vector2I(20, 60), "Edit", 32, Colors.BLACK, Colors.BLANK);
+        exitButton = new Button(new Vector2I(20, 100), "Exit", 32, Colors.BLACK, Colors.BLANK);
     }
 
     @Override
@@ -39,5 +39,6 @@ public class MenuScene implements Scene {
     }
 
     @Override
-    public void draw() {}
+    public void draw() {
+    }
 }

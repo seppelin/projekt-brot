@@ -7,11 +7,10 @@ import src.game.Player;
 import src.ui.InputHandle;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-public class PlayScene implements Scene {
+public class PlayScene implements SceneInterface {
     Camera camera;
     Player player;
     Map map;
@@ -22,12 +21,13 @@ public class PlayScene implements Scene {
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        this.player = new Player(map.getWidth()/2, map.getHeight()/2);
+        this.player = new Player(map.getWidth() / 2, map.getHeight() / 2);
         this.camera = new Camera(160, 160, 4);
     }
 
     @Override
-    public void setup(SceneManager sceneManager) {}
+    public void setup(SceneManager sceneManager) {
+    }
 
     @Override
     public void update(SceneManager sm, InputHandle inputHandle) {

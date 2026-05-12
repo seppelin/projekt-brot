@@ -3,28 +3,31 @@ package src.scenes;
 // Todo: make a simple editor for the map
 
 import com.raylib.Colors;
-import com.raylib.Helpers;
 import com.raylib.Raylib;
 import src.game.Camera;
 import src.game.FieldType;
+import src.game.ItemType;
 import src.game.Map;
+import src.math.Vector2I;
 import src.ui.*;
 
 import java.io.*;
 
-public class EditScene implements Scene {
+public class EditScene implements SceneInterface {
     Selector selector;
     Camera camera;
     Map map;
     Button saveButton;
     Button loadButton;
+    Button changeButton;
 
     public EditScene() {
-        this.selector = new Selector(Helpers.newVector2(500, 10), 6, FieldType.values(), 2);
+        this.selector = new Selector(new Vector2I(0, 0), 6, FieldType.values(), 2);
         this.camera = new Camera(160, 160, 2);
         this.map = new Map(20, 20);
-        this.saveButton = new Button(Helpers.newVector2(10, 10), "save", 28, Colors.BLACK, Colors.BLANK);
-        this.loadButton = new Button(Helpers.newVector2(100, 10), "load", 28, Colors.BLACK, Colors.BLANK);
+        this.saveButton = new Button(new Vector2I(10, 10), "save", 28, Colors.BLACK, Colors.BLANK);
+        this.loadButton = new Button(new Vector2I(100, 10), "load", 28, Colors.BLACK, Colors.BLANK);
+        this.changeButton = new Button(new Vector2I(0, 0), "change", 28, Colors.BLACK, Colors.BLANK);
     }
 
     @Override
@@ -32,11 +35,14 @@ public class EditScene implements Scene {
         sceneManager.addUiElement(saveButton);
         sceneManager.addUiElement(loadButton);
         sceneManager.addUiElement(selector);
-        var layout = new LayoutAlign(0, Align.Start);
+        sceneManager.addUiElement(changeButton);
+
+        var layout = new AlignLayout(0, Align.Start, new Vector2I(10, 10));
         sceneManager.setRootLayout(layout);
-        layout.set(saveButton, Align.Start);
-        layout.set(loadButton, Align.Middle);
-        layout.set(selector, Align.End);
+        layout.add(saveButton, Align.Start);
+        layout.add(loadButton, Align.Start);
+        layout.add(changeButton, Align.End);
+        layout.add(selector, Align.End);
     }
 
     @Override
@@ -55,8 +61,15 @@ public class EditScene implements Scene {
                 throw new RuntimeException(e);
             }
         }
-        var fieldID = this.selector.getSelectedID();
-        map.updateEdits(inputHandle, FieldType.getById(fieldID), this.camera);
+        if (changeButton.isClicked()) {
+            this.selector.setItems(ItemType.values());
+        }
+
+        var sel = this.selector.getSelected();
+        if (sel instanceof FieldType) {
+            map.updateEdits(inputHandle, (FieldType) sel, this.camera);
+        }
+
         camera.handleResize();
         camera.mouseMove(inputHandle);
         camera.scrollZoom(inputHandle);

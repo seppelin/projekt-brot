@@ -3,19 +3,21 @@ package src.ui;
 import com.raylib.Colors;
 import com.raylib.Helpers;
 import com.raylib.Raylib;
+import src.math.RectangleI;
+import src.math.Vector2I;
 
-public class Selector implements UiElement, LayoutElement {
+public class Selector implements UiInterface, LayoutInterface {
     static Raylib.Texture outlineTexture;
 
-    Raylib.Vector2 pos;
+    Vector2I pos;
     int itemsPerRow;
-    SelectorItem[] items;
+    SelItemInterface[] items;
     int hovered;
     int clicked;
     int selected;
     float scale;
 
-    public Selector(Raylib.Vector2 pos, int itemsPerRow, SelectorItem[] items, float scale) {
+    public Selector(Vector2I pos, int itemsPerRow, SelItemInterface[] items, float scale) {
         if (outlineTexture == null) {
             var img = Raylib.GenImageColor(16, 16, Colors.BLANK);
             Raylib.ImageDrawRectangleLines(img, Helpers.newRectangle(0, 0, 16, 16), 1, Colors.BLACK);
@@ -30,21 +32,27 @@ public class Selector implements UiElement, LayoutElement {
         clicked = -1;
     }
 
-    public int getSelectedID() {
-        return items[selected].getId();
+    public void setItems(SelItemInterface[] items) {
+        this.items = items;
+        this.selected = 0;
+        this.hovered = -1;
+        this.clicked = -1;
     }
 
-    private Raylib.Rectangle getLocalBox(int i) {
+    public SelItemInterface getSelected() {
+        return items[selected];
+    }
 
+    private RectangleI getLocalBox(int i) {
         var x = i % this.itemsPerRow;
         var y = i / this.itemsPerRow;
-        return Helpers.newRectangle((x * 16 * 1.1F * scale), (y * 16 * 1.1F * scale), 16 * scale, 16 * scale);
+        var size = Math.round(16 * scale);
+        return new RectangleI(Math.round(x * 16 * 1.1F * scale), Math.round(y * 16 * 1.1F * scale), size, size);
     }
 
-    private Raylib.Rectangle getBox(int i) {
+    private RectangleI getBox(int i) {
         var rect = getLocalBox(i);
-        rect.x(rect.x() + this.pos.x());
-        rect.y(rect.y() + this.pos.y());
+        rect.pos = rect.pos.add(pos);
         return rect;
     }
 
@@ -54,7 +62,7 @@ public class Selector implements UiElement, LayoutElement {
         clicked = -1;
         var mousePos = Raylib.GetMousePosition();
         for (int i = 0; i < items.length; i++) {
-            if (Raylib.CheckCollisionPointRec(mousePos, getBox(i))) {
+            if (Raylib.CheckCollisionPointRec(mousePos, getBox(i).rl())) {
                 this.hovered = i;
                 if (Raylib.IsMouseButtonPressed(Raylib.MOUSE_BUTTON_LEFT) && inputHandle.tryTakeMouse()) {
                     this.clicked = i;
@@ -67,7 +75,7 @@ public class Selector implements UiElement, LayoutElement {
     @Override
     public void draw() {
         for (int i = 0; i < items.length; i++) {
-            var rect = getBox(i);
+            var rect = getBox(i).rl();
             float hoverScale = hovered == i ? .1f : 0f;
             var tint = this.selected == i ? Colors.WHITE : Colors.GRAY;
             UiHelper.drawTextureScale(rect, items[i].getTexture(), this.scale, hoverScale, tint);
@@ -81,22 +89,21 @@ public class Selector implements UiElement, LayoutElement {
     }
 
     @Override
-    public void setSpace(Raylib.Rectangle rect) {
-        this.pos.x(rect.x());
-        this.pos.y(rect.y());
+    public void setSpace(RectangleI rect) {
+        this.pos = rect.pos;
     }
 
     @Override
-    public Raylib.Vector2 minimum() {
+    public Vector2I minimum() {
         var x = getLocalBox(Math.min(itemsPerRow - 1, items.length - 1));
         var y = getLocalBox(items.length);
-        var width = x.x() + x.width();
-        var height = y.y() + y.height();
-        return Helpers.newVector2(width, height);
+        var width = x.pos.x + x.size.x;
+        var height = y.pos.y + y.size.y;
+        return new Vector2I(width, height);
     }
 
     @Override
-    public Raylib.Vector2 variableSize() {
-        return new Raylib.Vector2();
+    public Vector2I variableSize() {
+        return new Vector2I(0, 0);
     }
 }

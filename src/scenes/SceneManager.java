@@ -2,27 +2,29 @@ package src.scenes;
 
 import com.raylib.Colors;
 import com.raylib.Raylib;
+import src.math.RectangleI;
+import src.math.Vector2I;
 import src.ui.InputHandle;
-import src.ui.LayoutElement;
+import src.ui.LayoutInterface;
 import src.ui.NoLayout;
-import src.ui.UiElement;
+import src.ui.UiInterface;
 
 import java.util.Vector;
 
 public class SceneManager {
-    private final Vector<UiElement> uiElements;
-    private LayoutElement rootLayout;
-    private Scene scene;
+    private final Vector<UiInterface> uiInterfaces;
+    private LayoutInterface rootLayout;
+    private SceneInterface scene;
     private boolean quit;
 
-    private SceneManager(Scene scene) {
+    private SceneManager(SceneInterface scene) {
         this.scene = null;
         this.quit = false;
-        this.uiElements = new Vector<>();
+        this.uiInterfaces = new Vector<>();
         this.changeScene(scene);
     }
 
-    public static void startGame(Scene scene) {
+    public static void startGame(SceneInterface scene) {
         SceneManager sceneManager = new SceneManager(scene);
         sceneManager.run();
     }
@@ -41,9 +43,10 @@ public class SceneManager {
 
     private void layout() {
         var max = this.rootLayout.maximum();
-        var rect = new Raylib.Rectangle();
-        rect.width(Math.min((float) Raylib.GetScreenWidth(), max.x()));
-        rect.height(Math.min((float) Raylib.GetScreenHeight(), max.y()));
+        var rect = new RectangleI(new Vector2I(0, 0), new Vector2I(
+                Math.min(Raylib.GetScreenWidth(), max.x),
+                Math.min(Raylib.GetScreenHeight(), max.y)
+        ));
 
         this.rootLayout.setSpace(rect);
     }
@@ -59,8 +62,8 @@ public class SceneManager {
         }
         InputHandle ih = new InputHandle();
         // Ui before the rest since on top
-        for (UiElement uiElement : uiElements) {
-            uiElement.update(ih);
+        for (UiInterface uiInterface : uiInterfaces) {
+            uiInterface.update(ih);
         }
         scene.update(this, ih);
     }
@@ -70,35 +73,40 @@ public class SceneManager {
         Raylib.ClearBackground(Colors.RAYWHITE);
         // Ui after the rest since on top
         scene.draw();
-        for (UiElement uiElement : uiElements) {
-            uiElement.draw();
+        for (UiInterface uiInterface : uiInterfaces) {
+            uiInterface.draw();
         }
         Raylib.EndDrawing();
     }
 
-    public void setRootLayout(LayoutElement rootLayout) {
+    public void setRootLayout(LayoutInterface rootLayout) {
         this.rootLayout = rootLayout;
     }
 
-    public void addUiElement(UiElement uiElement) {
-        uiElements.add(uiElement);
+    public void addUiElement(UiInterface uiInterface) {
+        uiInterfaces.add(uiInterface);
     }
 
-    public void removeUiElement(UiElement uiElement) {
-        uiElements.remove(uiElement);
+    public void removeUiElement(UiInterface uiInterface) {
+        uiInterfaces.remove(uiInterface);
     }
 
     public void quitGame() {
         quit = true;
     }
 
-    public void changeScene(Scene scene) {
+    public void changeScene(SceneInterface scene) {
         this.scene = scene;
-        this.uiElements.clear();
+        this.uiInterfaces.clear();
         this.rootLayout = new NoLayout();
         scene.setup(this);
         var min = this.rootLayout.minimum();
-        Raylib.SetWindowMinSize((int) min.x(), (int) min.y());
+        Raylib.SetWindowMinSize(min.x, min.y);
+
+        // Simple hack to simulate the start of the loop cycle
+        Raylib.BeginDrawing();
+        Raylib.EndDrawing();
         layout();
+        update();
     }
 }

@@ -1,24 +1,25 @@
 package src.ui;
 
-import com.raylib.Raylib;
+import src.math.RectangleI;
+import src.math.Vector2I;
 
-public class NoLayout implements LayoutElement {
+public class NoLayout implements LayoutInterface {
     @Override
     public void debugDraw() {
-        
+
     }
 
     @Override
-    public void setSpace(Raylib.Rectangle rect) {
+    public void setSpace(RectangleI rect) {
     }
 
     @Override
-    public Raylib.Vector2 minimum() {
-        return new Raylib.Vector2();
+    public Vector2I minimum() {
+        return new Vector2I(0, 0);
     }
 
     @Override
-    public Raylib.Vector2 variableSize() {
-        return new Raylib.Vector2();
+    public Vector2I variableSize() {
+        return new Vector2I(0, 0);
     }
 }
