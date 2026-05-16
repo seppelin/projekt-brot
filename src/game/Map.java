@@ -19,8 +19,6 @@ public class Map implements Serializable {
 
     private final Field[][] fields;
 
-    public BiConsumer<Integer, Integer> onFieldClick;
-
     public Map(int width, int height) {
         this.width = width;
         this.height = height;
@@ -45,7 +43,7 @@ public class Map implements Serializable {
         return height;
     }
 
-    public void update(InputHandle ih, Camera camera) {
+    public void update(InputHandle ih, Camera camera, BiConsumer<Integer, Integer> onFieldClick) {
         var worldMousePos = GetScreenToWorld2D(GetMousePosition(), camera);
         if (!IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
             return;

@@ -63,14 +63,6 @@ public class EditScene implements SceneInterface {
 
         var stack = new StackLayout(new AlignLayout[]{align, mapInputAlign});
         sceneManager.setRootLayout(stack);
-        map.onFieldClick = (x, y) -> {
-            var sel = this.editSelect.selector.getSelected();
-            switch (this.editSelect.state) {
-                case FieldType -> map.getField(x, y).setType((FieldType) sel);
-                case Building -> map.getField(x, y).setItem((ItemType) sel);
-                case FillField -> map.batchUpdate(x, y, (FieldType) sel, null);
-            }
-        };
     }
 
     @Override
@@ -91,7 +83,16 @@ public class EditScene implements SceneInterface {
         camera.handleResize();
         camera.mouseMove(inputHandle);
         camera.scrollZoom(inputHandle);
-        map.update(inputHandle, camera);
+        map.update(inputHandle, camera, this::onMapFieldClick);
+    }
+
+    public void onMapFieldClick(Integer x, Integer y) {
+        var sel = this.editSelect.selector.getSelected();
+        switch (this.editSelect.state) {
+            case FieldType -> map.getField(x, y).setType((FieldType) sel);
+            case Building -> map.getField(x, y).setItem((ItemType) sel);
+            case FillField -> map.batchUpdate(x, y, (FieldType) sel, null);
+        }
     }
 
     @Override
