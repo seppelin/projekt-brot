@@ -16,6 +16,17 @@ public class Button implements UiInterface, LayoutInterface {
         this.texture = texture;
     }
 
+    public Button(String text, int textSize) {
+        int height = textSize + 8;
+        int width = Raylib.MeasureText(text, textSize) + 8;
+        width += width / 10;
+
+        var img = Raylib.GenImageColor(width, height, Colors.BLANK);
+        Raylib.ImageDrawText(img, text, 4, 4, textSize, Colors.BLACK);
+        this.rect = new RectangleI(new Vector2I(0, 0), new Vector2I(width, height));
+        this.texture = Raylib.LoadTextureFromImage(img);
+    }
+
     public Button(Vector2I pos, String text, int textSize, Raylib.Color textColor, Raylib.Color backgroundColor) {
         int height = textSize + 8;
         int width = Raylib.MeasureText(text, textSize) + 8;
@@ -26,17 +37,18 @@ public class Button implements UiInterface, LayoutInterface {
         this.texture = Raylib.LoadTextureFromImage(img);
     }
 
+    public RectangleI getRect() {
+        return rect;
+    }
+
     @Override
     public void update(InputHandle inputHandle) {
         var mousePos = Raylib.GetMousePosition();
         if (Raylib.CheckCollisionPointRec(mousePos, rect.rl())) {
             isHovered = true;
-            if (Raylib.IsMouseButtonPressed(Raylib.MOUSE_BUTTON_LEFT) && inputHandle.tryTakeMouse()) {
-                isClicked = true;
-            }
+            isClicked = Raylib.IsMouseButtonPressed(Raylib.MOUSE_BUTTON_LEFT) && inputHandle.tryTakeMouse();
         } else {
             isHovered = false;
-            isClicked = false;
         }
     }
 
@@ -50,11 +62,6 @@ public class Button implements UiInterface, LayoutInterface {
     }
 
     @Override
-    public void debugDraw() {
-        Raylib.DrawRectangleLinesEx(rect.rl(), 1, Colors.RED);
-    }
-
-    @Override
     public void setSpace(RectangleI rect) {
         this.rect = rect;
     }
@@ -65,7 +72,7 @@ public class Button implements UiInterface, LayoutInterface {
     }
 
     @Override
-    public Vector2I variableSize() {
-        return new Vector2I(0, 0);
+    public float extraSpaceGreed() {
+        return 0;
     }
 }

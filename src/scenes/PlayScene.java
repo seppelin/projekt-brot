@@ -31,7 +31,6 @@ public class PlayScene implements SceneInterface {
 
     @Override
     public void update(SceneManager sm, InputHandle inputHandle) {
-        map.update();
         player.update(inputHandle, this.map);
         camera.target(player.getPosition());
         camera.handleResize();

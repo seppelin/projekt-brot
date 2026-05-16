@@ -6,6 +6,7 @@ import src.ui.SelItemInterface;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.function.BiConsumer;
 
 import static com.raylib.Raylib.*;
 
@@ -16,7 +17,9 @@ public class Map implements Serializable {
     private final int width;
     private final int height;
 
-    private Field[][] fields;
+    private final Field[][] fields;
+
+    public BiConsumer<Integer, Integer> onFieldClick;
 
     public Map(int width, int height) {
         this.width = width;
@@ -42,8 +45,38 @@ public class Map implements Serializable {
         return height;
     }
 
-    public void update() {
+    public void update(InputHandle ih, Camera camera) {
+        var worldMousePos = GetScreenToWorld2D(GetMousePosition(), camera);
+        if (!IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+            return;
+        }
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16)) && ih.tryTakeMouse()) {
+                    onFieldClick.accept(x, y);
+                }
+            }
+        }
+    }
 
+    public void batchUpdate(int x, int y, FieldType type, FieldType old) {
+        if (old == null) {
+            old = fields[x][y].type;
+        }
+        if (x < 0 || y < 0 || x >= width || y >= height) {
+            return;
+        }
+        var field = fields[x][y];
+        if (field.type == type || field.type != old) {
+            return;
+        }
+
+        field.setType(type);
+
+        batchUpdate(x, y - 1, type, old);
+        batchUpdate(x, y + 1, type, old);
+        batchUpdate(x - 1, y, type, old);
+        batchUpdate(x + 1, y, type, old);
     }
 
     public void updateSelection(InputHandle inputHandle, SelItemInterface selected, Camera camera) {
@@ -55,7 +88,7 @@ public class Map implements Serializable {
                         if (selected instanceof FieldType) {
                             getField(x, y).type = (FieldType) selected;
                         } else {
-                            getField(x, y).setItem((ItemType)  selected);
+                            getField(x, y).setItem((ItemType) selected);
                         }
                     }
                 }

@@ -4,19 +4,29 @@ import src.math.RectangleI;
 import src.math.Vector2I;
 
 public interface LayoutInterface {
-    void debugDraw();
-
     void setSpace(RectangleI rect);
 
     Vector2I minimum();
 
     /**
-     * @return Should return the extra space above the minimum which could be assigned
-     * When size is constant this is 0, when grow infinite this is very big
+     * @return returns the greed you want extra space with
+     * if 0 you are fixed size
+     * there is only fixed size and infinite growing
+     * default is 1
      */
-    Vector2I variableSize();
+    default float extraSpaceGreed() {
+        return 1;
+    }
 
-    default Vector2I maximum() {
-        return minimum().add(variableSize());
+    default void setSpaceSafe(RectangleI rect) {
+        Vector2I min = minimum();
+        if (min.x > rect.size.x || min.y > rect.size.y) {
+            throw new RuntimeException("Invalid rectangle: too small");
+        }
+        if (extraSpaceGreed() == 0) {
+            rect.size.x = min.x;
+            rect.size.y = min.y;
+        }
+        setSpace(rect);
     }
 }

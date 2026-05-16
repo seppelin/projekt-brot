@@ -5,7 +5,6 @@ import src.math.Vector2I;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class AlignLayout implements LayoutInterface {
     // 0 is x direction, 1 is y direction
@@ -45,11 +44,11 @@ public class AlignLayout implements LayoutInterface {
     }
 
     private void distributeSpace() {
-        int spaceLeft = this.rect.size.get(direction);
+        int spaceLeft = this.rect.size.get(direction) - this.padding.get(direction);
         for (var i : items) {
             var toAssign = i.iface.minimum().get(direction);
             i.assignedSpace = toAssign;
-            spaceLeft -= toAssign;
+            spaceLeft -= toAssign + this.padding.get(direction);
         }
 
         if (spaceLeft < 0) {
@@ -57,24 +56,24 @@ public class AlignLayout implements LayoutInterface {
             return;
         }
 
-        var mappedByVarSize = new ArrayList<>(IntStream.range(0, items.size()).boxed().toList());
-        mappedByVarSize.sort((a, b) -> Integer.compare(
-                items.get(a).iface.minimum().get(direction),
-                items.get(b).iface.minimum().get(direction)
-        ));
+        float totalGreed = 0;
+        for (var i : items) {
+            totalGreed += i.iface.extraSpaceGreed();
+        }
 
-        for (int mapIndex = 0; mapIndex < mappedByVarSize.size(); mapIndex++) {
-            var distributerCount = items.size() - mapIndex;
+        if (totalGreed == 0) {
+            return;
+        }
 
-            var item = items.get(mappedByVarSize.get(mapIndex));
-            var varSpace = item.iface.variableSize().get(direction);
-
-            var totalSpace = Math.min(distributerCount * varSpace, spaceLeft);
-            var spaceForEach = totalSpace / distributerCount;
-            for (int distributeIndex = items.size() - 1; distributeIndex >= mapIndex; distributeIndex--) {
-                items.get(distributeIndex).assignedSpace += spaceForEach;
-                spaceLeft -= spaceForEach;
+        for (var i : items) {
+            var share = i.iface.extraSpaceGreed() / totalGreed;
+            var toTake = Math.round(share * spaceLeft);
+            if (toTake > spaceLeft) {
+                toTake = spaceLeft;
+                System.out.println("This was useful");
             }
+            i.assignedSpace += toTake;
+            spaceLeft -= toTake;
         }
     }
 
@@ -99,23 +98,25 @@ public class AlignLayout implements LayoutInterface {
     private void setSpaceAlign(int alignPos, Align align) {
         for (var i : items) {
             if (i.align == align) {
-                var crossAlignSize = getCrossAlignSize(i.iface.maximum());
+                var max = i.iface.extraSpaceGreed() == 0 ? i.iface.minimum() : rect.size;
+                var crossAlignSize = getCrossAlignSize(max);
                 var crossAlignPos = getCrossAlignPos(crossAlignSize);
+
+                RectangleI rect;
                 if (direction == 0) {
-                    i.iface.setSpace(new RectangleI(alignPos, crossAlignPos, i.assignedSpace, crossAlignSize));
+                    rect = new RectangleI(alignPos, crossAlignPos, i.assignedSpace, crossAlignSize);
                 } else {
-                    i.iface.setSpace(new RectangleI(crossAlignPos, alignPos, crossAlignSize, i.assignedSpace));
+                    rect = new RectangleI(crossAlignPos, alignPos, crossAlignSize, i.assignedSpace);
                 }
+                rect.pos = rect.pos.add(this.rect.pos);
+                i.iface.setSpace(rect);
+
                 alignPos += i.assignedSpace;
                 alignPos += padding.get(direction);
             }
         }
     }
 
-    @Override
-    public void debugDraw() {
-
-    }
 
     @Override
     public void setSpace(RectangleI rect) {
@@ -126,7 +127,7 @@ public class AlignLayout implements LayoutInterface {
         var startPos = padding.get(direction);
         var endPos = rect.size.get(direction) - getAlignSpace(Align.End);
 
-        var minMiddle = getAlignSpace(Align.Start);
+        var minMiddle = startPos + getAlignSpace(Align.Start);
         var maxMiddle = endPos - getAlignSpace(Align.Middle);
         var optimalMiddle = (rect.size.get(direction) / 2) - (getAlignSpace(Align.Middle) / 2);
         var middlePos = Math.clamp(optimalMiddle, minMiddle, maxMiddle);
@@ -146,10 +147,5 @@ public class AlignLayout implements LayoutInterface {
             min.set(direction ^ 1, Math.max(min.get(direction ^ 1), itemMin.get(direction ^ 1) + 2 * padding.get(direction ^ 1)));
         }
         return min;
-    }
-
-    @Override
-    public Vector2I variableSize() {
-        return new Vector2I(10000, 10000);
     }
 }

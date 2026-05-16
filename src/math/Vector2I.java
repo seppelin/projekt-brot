@@ -37,6 +37,14 @@ public class Vector2I {
         }
     }
 
+    public Vector2I min(Vector2I other) {
+        return new Vector2I(Math.min(x, other.x), Math.min(y, other.y));
+    }
+
+    public Vector2I max(Vector2I other) {
+        return new Vector2I(Math.max(x, other.x), Math.max(y, other.y));
+    }
+
     public Raylib.Vector2 rl() {
         return Helpers.newVector2(x, y);
     }

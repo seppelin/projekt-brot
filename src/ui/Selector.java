@@ -83,10 +83,6 @@ public class Selector implements UiInterface, LayoutInterface {
         }
     }
 
-    @Override
-    public void debugDraw() {
-
-    }
 
     @Override
     public void setSpace(RectangleI rect) {
@@ -95,7 +91,7 @@ public class Selector implements UiInterface, LayoutInterface {
 
     @Override
     public Vector2I minimum() {
-        var x = getLocalBox(Math.min(itemsPerRow - 1, items.length - 1));
+        var x = getLocalBox(itemsPerRow - 1);
         var y = getLocalBox(items.length);
         var width = x.pos.x + x.size.x;
         var height = y.pos.y + y.size.y;
@@ -103,7 +99,7 @@ public class Selector implements UiInterface, LayoutInterface {
     }
 
     @Override
-    public Vector2I variableSize() {
-        return new Vector2I(0, 0);
+    public float extraSpaceGreed() {
+        return 0;
     }
 }

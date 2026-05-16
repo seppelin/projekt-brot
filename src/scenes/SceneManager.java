@@ -3,7 +3,6 @@ package src.scenes;
 import com.raylib.Colors;
 import com.raylib.Raylib;
 import src.math.RectangleI;
-import src.math.Vector2I;
 import src.ui.InputHandle;
 import src.ui.LayoutInterface;
 import src.ui.NoLayout;
@@ -42,30 +41,24 @@ public class SceneManager {
     }
 
     private void layout() {
-        var max = this.rootLayout.maximum();
-        var rect = new RectangleI(new Vector2I(0, 0), new Vector2I(
-                Math.min(Raylib.GetScreenWidth(), max.x),
-                Math.min(Raylib.GetScreenHeight(), max.y)
-        ));
-
-        this.rootLayout.setSpace(rect);
+        var rect = new RectangleI(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+        this.rootLayout.setSpaceSafe(rect);
     }
 
     private void update() {
-        if (Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
-            if (scene instanceof MenuScene) {
-                quitGame();
-            } else {
-                changeScene(new MenuScene());
-            }
-            return;
-        }
         InputHandle ih = new InputHandle();
         // Ui before the rest since on top
         for (UiInterface uiInterface : uiInterfaces) {
             uiInterface.update(ih);
         }
         scene.update(this, ih);
+        if (ih.tryTakeKeyBoard() && Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
+            if (scene instanceof MenuScene) {
+                quitGame();
+            } else {
+                changeScene(new MenuScene());
+            }
+        }
     }
 
     private void draw() {

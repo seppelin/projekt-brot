@@ -8,10 +8,10 @@ import src.ui.SelItemInterface;
 import java.io.Serializable;
 
 public enum FieldType implements SelItemInterface, Serializable {
-    GRASS(0, "grass", true, "resources/grass.png"),
-    WATER(1, "water", false, "resources/water.png"),
+    GRASS(0, "grass", true, "resources/fields/grass.png"),
+    WATER(1, "water", false, "resources/fields/water.png"),
     VOID(2, "void", false, ""),
-    GRASSDARK(3, "dark-grass", true, "resources/grasdunkel.png");
+    GRASSDARK(3, "dark-grass", true, "resources/fields/grasdunkel.png");
 
     public final int id;
     public final String name;

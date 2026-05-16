@@ -4,7 +4,7 @@ import com.raylib.Raylib;
 import src.ui.SelItemInterface;
 
 public enum ItemType implements SelItemInterface {
-    Brot(0, "brot", "resources/brot.png");
+    Brot(0, "brot", "resources/buildings/brot.png");
 
     public final int id;
     public final String name;
