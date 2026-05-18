@@ -27,7 +27,7 @@ public class ShopScene implements Scene{
     public void setup(SceneManager sceneManager){
         sceneManager.addUiElement(MenuButton);
     }
-    public void update(SceneManager sceneManager){
+    public void update(InputHandle ih, SceneManager sceneManager){
         if (MenuButton.isClicked()){
             sceneManager.changeScene(new MenuScene());
         }

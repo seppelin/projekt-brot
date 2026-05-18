@@ -12,9 +12,6 @@ public class MenuScene implements SceneInterface {
     Button shopButton;
 
     public MenuScene() {
-        playButton = new Button(Helpers.newVector2(20, 20), "Play", 32,Colors.BLACK, Colors.BLANK);
-        editButton = new Button(Helpers.newVector2(20, 60), "Edit", 32,Colors.BLACK, Colors.BLANK);
-        exitButton = new Button(Helpers.newVector2(20, 100), "Exit", 32,Colors.BLACK, Colors.BLANK);
 
         playButton = new Button(new Vector2I(20, 20), "Play", 32, Colors.BLACK, Colors.BLANK);
         editButton = new Button(new Vector2I(20, 60), "Edit", 32, Colors.BLACK, Colors.BLANK);
