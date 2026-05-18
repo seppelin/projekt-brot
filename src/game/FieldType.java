@@ -1,12 +1,17 @@
 package src.game;
 
 
+import com.raylib.Colors;
 import com.raylib.Raylib;
-import src.ui.SelectorItem;
+import src.ui.SelItemInterface;
 
-public enum FieldType implements SelectorItem {
-    GRASS(0, "grass", true, "resources/grass.png"),
-    WATER(1, "water", false, "resources/water.png");
+import java.io.Serializable;
+
+public enum FieldType implements SelItemInterface, Serializable {
+    GRASS(0, "grass", true, "resources/fields/grass.png"),
+    WATER(1, "water", false, "resources/fields/water.png"),
+    VOID(2, "void", false, ""),
+    GRASSDARK(3, "dark-grass", true, "resources/fields/grasdunkel.png");
 
     public final int id;
     public final String name;
@@ -18,10 +23,15 @@ public enum FieldType implements SelectorItem {
         this.name = name;
         this.walkable = walkable;
         // This only loads once when the game starts
-        this.texture = Raylib.LoadTexture(path);
+        if (path.isEmpty()) {
+            var img = Raylib.GenImageColor(16, 16, Colors.BLANK);
+            texture = Raylib.LoadTextureFromImage(img);
+        } else {
+            texture = Raylib.LoadTexture(path);
+        }
     }
 
-    FieldType getById(int id) {
+    public static FieldType getById(int id) {
         for (FieldType type : FieldType.values()) {
             if (type.id == id) {
                 return type;

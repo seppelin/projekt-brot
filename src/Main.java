@@ -5,17 +5,14 @@ import src.scenes.SceneManager;
 
 import static com.raylib.Raylib.*;
 
-
-class Main {
-    public static int SCREEN_WIDTH = 800;
-    public static int SCREEN_HEIGHT = 600;
+public class Main {
 
     public static void main(String[] args) {
         SetTraceLogLevel(LOG_WARNING);
         SetTargetFPS(60);
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 
-        InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo");
+        InitWindow(1600, 900, "Demo");
 
         SetExitKey(0);
 

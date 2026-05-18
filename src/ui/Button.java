@@ -1,49 +1,78 @@
 package src.ui;
 
-import com.raylib.Helpers;
+import com.raylib.Colors;
 import com.raylib.Raylib;
+import src.math.RectangleI;
+import src.math.Vector2I;
 
-import static com.raylib.Raylib.*;
-
-public class Button implements UiElement {
-    private final Rectangle rect;
-    private final Texture texture;
+public class Button implements UiInterface, LayoutInterface {
+    private final Raylib.Texture texture;
+    private RectangleI rect;
     private boolean isHovered = false;
     private boolean isClicked = false;
 
-    public Button(Vector2 pos, Texture texture) {
-        this.rect = Helpers.newRectangle(pos.x(), pos.y(), texture.width(), texture.height());
+    public Button(Vector2I pos, Raylib.Texture texture) {
+        this.rect = new RectangleI(pos, new Vector2I(texture.width(), texture.height()));
         this.texture = texture;
     }
 
-    public Button(Vector2 pos, String text, int textSize, Color textColor, Color backgroundColor) {
+    public Button(String text, int textSize) {
         int height = textSize + 8;
-        int width = MeasureText(text, textSize) + 8;
+        int width = Raylib.MeasureText(text, textSize) + 8;
+        width += width / 10;
 
-        var img = GenImageColor(width, height, backgroundColor);
-        ImageDrawText(img, text, 4, 4, textSize, textColor);
-        this.rect = Helpers.newRectangle(pos.x(), pos.y(), width, height);
-        this.texture = LoadTextureFromImage(img);
+        var img = Raylib.GenImageColor(width, height, Colors.BLANK);
+        Raylib.ImageDrawText(img, text, 4, 4, textSize, Colors.BLACK);
+        this.rect = new RectangleI(new Vector2I(0, 0), new Vector2I(width, height));
+        this.texture = Raylib.LoadTextureFromImage(img);
+    }
+
+    public Button(Vector2I pos, String text, int textSize, Raylib.Color textColor, Raylib.Color backgroundColor) {
+        int height = textSize + 8;
+        int width = Raylib.MeasureText(text, textSize) + 8;
+
+        var img = Raylib.GenImageColor(width, height, backgroundColor);
+        Raylib.ImageDrawText(img, text, 4, 4, textSize, textColor);
+        this.rect = new RectangleI(pos, new Vector2I(width, height));
+        this.texture = Raylib.LoadTextureFromImage(img);
+    }
+
+    public RectangleI getRect() {
+        return rect;
     }
 
     @Override
-    public void update() {
+    public void update(InputHandle inputHandle) {
         var mousePos = Raylib.GetMousePosition();
-        if (CheckCollisionPointRec(mousePos, rect)) {
+        if (Raylib.CheckCollisionPointRec(mousePos, rect.rl())) {
             isHovered = true;
-            isClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+            isClicked = Raylib.IsMouseButtonPressed(Raylib.MOUSE_BUTTON_LEFT) && inputHandle.tryTakeMouse();
         } else {
             isHovered = false;
-            isClicked = false;
         }
     }
 
     @Override
     public void draw() {
-        UiHelper.drawTextureHover(rect, texture, isHovered);
+        UiHelper.drawTextureHover(rect.rl(), texture, isHovered);
     }
 
     public boolean isClicked() {
         return isClicked;
+    }
+
+    @Override
+    public void setSpace(RectangleI rect) {
+        this.rect = rect;
+    }
+
+    @Override
+    public Vector2I minimum() {
+        return rect.size;
+    }
+
+    @Override
+    public float extraSpaceGreed() {
+        return 0;
     }
 }
