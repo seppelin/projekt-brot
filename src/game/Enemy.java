@@ -22,9 +22,14 @@ public class Enemy {
     }
 
     public void update(Map map, Vector2 target) {
+        // make us origin of vector, so direction is the target
         velocity = Vector2Subtract(target, position);
+        
+        // control speed
         velocity = Vector2Normalize(velocity);
-        velocity = Vector2Scale(velocity, 1);
+        velocity = Vector2Scale(velocity, 0.5f);
+        
+        // change position
         position = Vector2Add(position, velocity);
         position = map.nearestValidPosition(position);
     }
