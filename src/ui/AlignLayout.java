@@ -68,10 +68,7 @@ public class AlignLayout implements LayoutInterface {
         for (var i : items) {
             var share = i.iface.extraSpaceGreed() / totalGreed;
             var toTake = Math.round(share * spaceLeft);
-            if (toTake > spaceLeft) {
-                toTake = spaceLeft;
-                System.out.println("This was useful");
-            }
+            toTake = Math.min(toTake, spaceLeft);
             i.assignedSpace += toTake;
             spaceLeft -= toTake;
         }
@@ -98,7 +95,7 @@ public class AlignLayout implements LayoutInterface {
     private void setSpaceAlign(int alignPos, Align align) {
         for (var i : items) {
             if (i.align == align) {
-                var max = i.iface.extraSpaceGreed() == 0 ? i.iface.minimum() : rect.size;
+                var max = i.iface.extraSpaceGreed() == 0 ? i.iface.minimum() : rect.size.sub(this.padding).sub(this.padding);
                 var crossAlignSize = getCrossAlignSize(max);
                 var crossAlignPos = getCrossAlignPos(crossAlignSize);
 

@@ -21,6 +21,10 @@ public class Vector2I {
         return new Vector2I(x + other.x, y + other.y);
     }
 
+    public Vector2I sub(Vector2I other) {
+        return new Vector2I(x - other.x, y - other.y);
+    }
+
     public int get(int i) {
         if (i == 0) {
             return x;
