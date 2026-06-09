@@ -4,6 +4,7 @@ import com.raylib.Raylib;
 import com.raylib.Colors;
 import src.math.Vector2I;
 import src.ui.Button;
+import src.ui.MenuIcon;
 import src.ui.InputHandle;
 import src.game.Player;
 import src.game.Camera;
@@ -18,6 +19,8 @@ public class MenuScene implements SceneInterface {
     Button editButton;
     Button exitButton;
     Button shopButton;
+    MenuIcon shopIcon;
+    
     Player player;
     Camera camera;
     Map map;
@@ -29,6 +32,8 @@ public class MenuScene implements SceneInterface {
         editButton = new Button(new Vector2I(20, 60), "Edit", 32, Colors.BLACK, Colors.BLANK);
         exitButton = new Button(new Vector2I(20, 100), "Exit", 32, Colors.BLACK, Colors.BLANK);
         shopButton = new Button(new Vector2I(20, 140), "Shop", 32,Colors.RED, Colors.BLANK);
+        shopIcon = new MenuIcon (new Vector2I(389, 350), Raylib.LoadTexture("resources/shopicon.png"));
+        
         this.player = new Player(20, 20);
         this.camera = new Camera(160, 160, 4);
         this.map = new Map(140, 140, FieldType.GRASSDARK);
@@ -64,6 +69,7 @@ public class MenuScene implements SceneInterface {
         player.updateNoMap(inputHandle);
         camera.target(player.getPosition());
         camera.handleResize();
+        shopIcon.update(inputHandle, player.getPosition());
     }
 
     @Override
@@ -73,8 +79,12 @@ public class MenuScene implements SceneInterface {
         Raylib.DrawTexture(shopimage, 100, 100, Colors.WHITE);
 
         player.draw();
+        shopIcon.draw();
         Raylib.EndMode2D();
+        
+        
         var pos = player.getPosition();
         Raylib.DrawText("x:" + Math.round(pos.x()) + " y:" + Math.round(pos.y()), 200, 10, 20, Colors.BLACK);
+        
     }
 }
