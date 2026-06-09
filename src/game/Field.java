@@ -22,7 +22,7 @@ public class Field implements Serializable {
     }
     
     public void update(int x, int y, Vector<Enemy> enemies) {
-        if (Math.random() > 0.999) {
+        if (item == ItemType.Spawner && Math.random() > 0.999) {
             enemies.add(new Enemy(x, y));
         }
     }
