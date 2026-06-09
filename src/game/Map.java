@@ -59,7 +59,8 @@ public class Map implements Serializable {
         }
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16)) && ih.tryTakeMouse()) {
+                if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16)) 
+                    && ih.tryTakeMouse()) {
                     onFieldClick.accept(x, y);
                 }
             }
@@ -91,7 +92,8 @@ public class Map implements Serializable {
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16)) && inputHandle.tryTakeMouse()) {
+                    if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16)) 
+                        && inputHandle.tryTakeMouse()) {
                         if (selected instanceof FieldType) {
                             getField(x, y).type = (FieldType) selected;
                         } else {
