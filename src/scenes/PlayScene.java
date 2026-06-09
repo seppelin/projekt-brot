@@ -11,21 +11,23 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+import java.util.Vector;
+
 public class PlayScene implements SceneInterface {
+    public Vector<Enemy> enemies = new Vector<>();
+    
     Camera camera;
     Player player;
-    Enemy enemy;
     Map map;
 
     public PlayScene() {
-        try (var in = new ObjectInputStream(new FileInputStream("map.savefile"))) {
+        try (var in = new ObjectInputStream(new FileInputStream("resources/maps/default.mapdata"))) {
             this.map = (Map) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
         this.player = new Player(map.getWidth() / 2, map.getHeight() / 2);
         this.camera = new Camera(160, 160, 4);
-        this.enemy = new Enemy(2, 1);
     }
 
     @Override
@@ -35,10 +37,13 @@ public class PlayScene implements SceneInterface {
     @Override
     public void update(SceneManager sm, InputHandle inputHandle) {
         player.update(inputHandle, this.map);
-        enemy.update(this.map, this.player.getPosition());
+        for (var e : enemies) {
+            e.update(this.map, this.player.getPosition());
+        }
         camera.target(player.getPosition());
         camera.handleResize();
         camera.scrollZoom(inputHandle);
+        map.updateFields(this.enemies);
         // Todo: go back to menu scene when ESC pressed
     }
 
@@ -47,7 +52,9 @@ public class PlayScene implements SceneInterface {
         Raylib.BeginMode2D(camera);
         map.draw();
         player.draw();
-        enemy.draw();
+        for (var e : enemies) {
+            e.draw();
+        }
         Raylib.EndMode2D();
     }
 }

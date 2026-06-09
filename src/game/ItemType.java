@@ -4,8 +4,8 @@ import com.raylib.Raylib;
 import src.ui.SelItemInterface;
 
 public enum ItemType implements SelItemInterface {
-    Brot(0, "brot", "resources/buildings/brot.png");
-
+    Brot(0, "brot", "resources/buildings/brot.png"),
+    Spawner(1, "spawner", "resources/buildings/spawner.png");
     public final int id;
     public final String name;
     public final Raylib.Texture texture;
