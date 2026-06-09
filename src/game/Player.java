@@ -36,11 +36,21 @@ public class Player {
         velocity = Vector2Normalize(velocity);
         velocity = Vector2Scale(velocity, 1);
     }
+    
+    public void updateNoMap(InputHandle ih) {
+        if (ih.tryTakeKeyBoard()) {
+            handleInput();
+        }
+        position = Vector2Add(position, velocity);
+        position = Vector2Clamp(position, Helpers.newVector2(338,391), Helpers.newVector2(437, 575));
+    }
 
     public void update(InputHandle inputHandle, Map map) {
         if (inputHandle.tryTakeKeyBoard()) {
             handleInput();
         }
+        
+        
         position = Vector2Add(position, velocity);
         position = map.nearestValidPosition(position);
     }
