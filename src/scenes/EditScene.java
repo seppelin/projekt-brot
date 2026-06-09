@@ -25,7 +25,7 @@ public class EditScene implements SceneInterface {
     public EditScene() {
         this.editSelect = new EditSelect();
         this.camera = new Camera(160, 160, 2);
-        this.map = new Map(20, 20);
+        this.map = new Map(20, 20, FieldType.GRASS);
         this.saveButton = new Button(new Vector2I(10, 10), "save", 28, Colors.BLACK, Colors.BLANK);
         this.loadButton = new Button(new Vector2I(100, 10), "load", 28, Colors.BLACK, Colors.BLANK);
         this.mapNameInput = new TextInput(20, 28);

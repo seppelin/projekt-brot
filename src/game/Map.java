@@ -19,14 +19,14 @@ public class Map implements Serializable {
 
     private final Field[][] fields;
 
-    public Map(int width, int height) {
+    public Map(int width, int height, FieldType field) {
         this.width = width;
         this.height = height;
 
         fields = new Field[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                fields[x][y] = new Field(FieldType.GRASS);
+                fields[x][y] = new Field(field);
             }
         }
     }
