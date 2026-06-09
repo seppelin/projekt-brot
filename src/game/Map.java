@@ -7,6 +7,7 @@ import src.ui.SelItemInterface;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.function.BiConsumer;
+import java.util.Vector;
 
 import static com.raylib.Raylib.*;
 
@@ -41,6 +42,14 @@ public class Map implements Serializable {
 
     public int getHeight() {
         return height;
+    }
+    
+    public void updateFields(Vector<Enemy> enemies) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+        
+                getField(x, y).update(x, y, enemies);
+            }}
     }
 
     public void update(InputHandle ih, Camera camera, BiConsumer<Integer, Integer> onFieldClick) {
