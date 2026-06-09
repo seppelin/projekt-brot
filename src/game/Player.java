@@ -21,7 +21,10 @@ public class Player {
         return position;
     }
 
-    private void handleInput() {
+    private void handleInput(InputHandle ih) {
+        if (IsKeyPressed(KEY_ESCAPE) || !ih.tryTakeKeyBoard()) {
+            return;
+        }
         velocity = Helpers.newVector2(0, 0);
         // Todo: handle input of player
         if (IsKeyDown(KEY_W)) {
@@ -38,18 +41,13 @@ public class Player {
     }
     
     public void updateNoMap(InputHandle ih) {
-        if (ih.tryTakeKeyBoard()) {
-            handleInput();
-        }
+        handleInput(ih);
         position = Vector2Add(position, velocity);
         position = Vector2Clamp(position, Helpers.newVector2(338,391), Helpers.newVector2(437, 575));
     }
 
     public void update(InputHandle inputHandle, Map map) {
-        if (inputHandle.tryTakeKeyBoard()) {
-            handleInput();
-        }
-        
+        handleInput(inputHandle);   
         
         position = Vector2Add(position, velocity);
         position = map.nearestValidPosition(position);
