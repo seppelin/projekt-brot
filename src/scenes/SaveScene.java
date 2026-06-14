@@ -19,4 +19,9 @@ public class SaveScene implements SceneInterface {
     public void draw() {
         Raylib.GuiButton(Helpers.newRectangle(10, 10, 200, 50), "Hello");
     }
+
+    @Override
+    public SceneInterface cloneScene() {
+        return new SaveScene();
+    }
 }

@@ -8,10 +8,11 @@ import src.ui.LayoutInterface;
 import src.ui.NoLayout;
 import src.ui.UiInterface;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 public class SceneManager {
-    private final Vector<UiInterface> uiInterfaces;
+    private final ArrayList<SceneInterface> sceneStack;
+    private final ArrayList<UiInterface> uiInterfaces;
     private LayoutInterface rootLayout;
     private SceneInterface scene;
     private boolean quit;
@@ -19,7 +20,8 @@ public class SceneManager {
     private SceneManager(SceneInterface scene) {
         this.scene = null;
         this.quit = false;
-        this.uiInterfaces = new Vector<>();
+        this.uiInterfaces = new ArrayList<>();
+        this.sceneStack = new ArrayList<>();
         this.changeScene(scene);
     }
 
@@ -52,11 +54,11 @@ public class SceneManager {
             uiInterface.update(ih);
         }
         scene.update(this, ih);
-        if (ih.tryTakeKeyBoard() && Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
-            if (scene instanceof MenuScene) {
+        if (ih.tryTakeEsc() && Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
+            if (sceneStack.isEmpty()) {
                 quitGame();
             } else {
-                changeScene(new MenuScene());
+                changeScene(sceneStack.removeLast());
             }
         }
     }
@@ -99,7 +101,13 @@ public class SceneManager {
         // Simple hack to simulate the start of the loop cycle
         Raylib.BeginDrawing();
         Raylib.EndDrawing();
+
         layout();
         update();
+    }
+
+    public void pushScene(SceneInterface scene) {
+        this.sceneStack.add(this.scene.cloneScene());
+        changeScene(scene);
     }
 }

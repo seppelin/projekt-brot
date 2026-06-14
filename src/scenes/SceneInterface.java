@@ -8,4 +8,6 @@ public interface SceneInterface {
     void update(SceneManager sceneManager, InputHandle inputHandle);
 
     void draw();
+
+    SceneInterface cloneScene();
 }

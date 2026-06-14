@@ -4,6 +4,15 @@ public class InputHandle {
     private boolean scrollTaken = false;
     private boolean mouseTaken = false;
     private boolean keysTaken = false;
+    private boolean escTaken = false;
+
+    public boolean tryTakeEsc() {
+        if (!escTaken) {
+            escTaken = true;
+            return true;
+        }
+        return false;
+    }
 
     public boolean tryTakeScroll() {
         if (!scrollTaken) {

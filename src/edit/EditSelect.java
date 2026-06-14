@@ -1,7 +1,5 @@
 package src.edit;
 
-import com.raylib.Colors;
-import com.raylib.Raylib;
 import src.game.FieldType;
 import src.math.RectangleI;
 import src.math.Vector2I;
@@ -52,9 +50,10 @@ public class EditSelect implements UiInterface, LayoutInterface {
         for (var state : EditSelectState.values()) {
             var button = buttons[state.ordinal()];
             if (state == this.state) {
-                Raylib.DrawRectangleRoundedLines(button.getRect().rl(), 0.5f, 2, Colors.BLACK);
+                button.draw();
+            } else {
+                button.drawInactive();
             }
-            button.draw();
         }
     }
 

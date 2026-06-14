@@ -39,6 +39,10 @@ public class TextInput implements UiInterface, LayoutInterface {
         return text;
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
     public void setSelected(boolean isSelected) {
         this.isSelected = isSelected;
     }
@@ -68,6 +72,11 @@ public class TextInput implements UiInterface, LayoutInterface {
         }
 
         entered = false;
+        if (isSelected && inputHandle.tryTakeEsc()) {
+            if (Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
+                this.isSelected = false;
+            }
+        }
         if (isSelected && inputHandle.tryTakeKeyBoard()) {
             char c = (char) Raylib.GetCharPressed();
             if (c != 0 && text.length() < maxLen) {
@@ -75,9 +84,6 @@ public class TextInput implements UiInterface, LayoutInterface {
             }
             if (Raylib.IsKeyPressed(Raylib.KEY_ENTER)) {
                 this.entered = true;
-            }
-            if (Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
-                this.isSelected = false;
             }
             if (Raylib.IsKeyPressed(Raylib.KEY_BACKSPACE) && !text.isEmpty()) {
                 text = text.substring(0, text.length() - 1);

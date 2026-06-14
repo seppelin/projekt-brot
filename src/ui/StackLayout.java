@@ -3,22 +3,27 @@ package src.ui;
 import src.math.RectangleI;
 import src.math.Vector2I;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
 
 public class StackLayout implements LayoutInterface {
-    public List<LayoutInterface> items;
+    List<LayoutInterface> items;
 
-    public StackLayout(LayoutInterface[] items){
+    public StackLayout(LayoutInterface[] items) {
         this.items = new ArrayList<LayoutInterface>();
         this.items.addAll(List.of(items));
     }
 
     public StackLayout() {
         this.items = new ArrayList<>();
+    }
+
+    public void add(LayoutInterface item) {
+        this.items.add(item);
+    }
+
+    public void remove(LayoutInterface item) {
+        this.items.remove(item);
     }
 
     @Override

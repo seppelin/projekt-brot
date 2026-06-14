@@ -5,6 +5,7 @@ package src.scenes;
 import com.raylib.Colors;
 import com.raylib.Raylib;
 import src.edit.EditSelect;
+import src.edit.MapLoader;
 import src.game.Camera;
 import src.game.FieldType;
 import src.game.ItemType;
@@ -12,72 +13,45 @@ import src.game.Map;
 import src.math.Vector2I;
 import src.ui.*;
 
-import java.io.*;
-
 public class EditScene implements SceneInterface {
     Camera camera;
     Map map;
+    String mapName;
     Button saveButton;
-    Button loadButton;
-    TextInput mapNameInput;
+    Button settings;
     EditSelect editSelect;
 
-    public EditScene() {
+    public EditScene(Map map, String mapName) {
+        this.map = map;
+        this.mapName = mapName;
         this.editSelect = new EditSelect();
         this.camera = new Camera(160, 160, 2);
-        this.map = new Map(20, 20, FieldType.GRASS);
-        this.saveButton = new Button(new Vector2I(10, 10), "save", 28, Colors.BLACK, Colors.BLANK);
-        this.loadButton = new Button(new Vector2I(100, 10), "load", 28, Colors.BLACK, Colors.BLANK);
-        this.mapNameInput = new TextInput(20, 28);
-    }
-
-    private void loadMap(String name) {
-        try (var in = new ObjectInputStream(new FileInputStream("resources/maps/" + name + ".mapdata"))) {
-            this.map = (Map) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void saveMap(String name) {
-        try (var out = new ObjectOutputStream(new FileOutputStream("resources/maps/" + name + ".mapdata"))) {
-            out.writeObject(map);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.saveButton = new Button("save", 28);
+        this.settings = new Button("settings", 28);
     }
 
     @Override
     public void setup(SceneManager sceneManager) {
+        var nameImg = new ImageUi(UiHelper.textTexture("Map(" + this.mapName + "):", 32, Colors.DARKBLUE));
+
         sceneManager.addUiElement(saveButton);
-        sceneManager.addUiElement(loadButton);
         sceneManager.addUiElement(editSelect);
+        sceneManager.addUiElement(nameImg);
+        sceneManager.addUiElement(settings);
 
         var align = new AlignLayout(0, Align.Start, new Vector2I(10, 10));
+        align.add(nameImg, Align.Start);
         align.add(saveButton, Align.Start);
-        align.add(loadButton, Align.Start);
+        align.add(settings, Align.Start);
         align.add(editSelect, Align.End);
 
-        var mapInputAlign = new AlignLayout(0, Align.Middle, new Vector2I(10, 10));
-        mapInputAlign.add(mapNameInput, Align.Middle);
-
-        var stack = new StackLayout(new AlignLayout[]{align, mapInputAlign});
-        sceneManager.setRootLayout(stack);
+        sceneManager.setRootLayout(align);
     }
 
     @Override
     public void update(SceneManager sm, InputHandle inputHandle) {
-        if (mapNameInput.isEntered()) {
-            saveMap(mapNameInput.getText());
-            mapNameInput.resetInput();
-            sm.removeUiElement(mapNameInput);
-        }
         if (saveButton.isClicked()) {
-            mapNameInput.setSelected(true);
-            sm.addUiElement(mapNameInput);
-        }
-        if (loadButton.isClicked()) {
-            loadMap("default");
+            MapLoader.saveMap(this.mapName, map);
         }
 
         camera.handleResize();
@@ -100,5 +74,10 @@ public class EditScene implements SceneInterface {
         Raylib.BeginMode2D(camera);
         map.draw();
         Raylib.EndMode2D();
+    }
+
+    @Override
+    public SceneInterface cloneScene() {
+        return new EditScene(this.map, this.mapName);
     }
 }

@@ -20,7 +20,7 @@ public class Selector implements UiInterface, LayoutInterface {
     public Selector(Vector2I pos, int itemsPerRow, SelItemInterface[] items, float scale) {
         if (outlineTexture == null) {
             var img = Raylib.GenImageColor(16, 16, Colors.BLANK);
-            Raylib.ImageDrawRectangleLines(img, Helpers.newRectangle(0, 0, 16, 16), 1, Colors.BLACK);
+            Raylib.ImageDrawRectangleLines(img, Helpers.newRectangle(0, 0, 16, 16), 1, Colors.WHITE);
             outlineTexture = Raylib.LoadTextureFromImage(img);
         }
         this.pos = pos;
@@ -76,10 +76,10 @@ public class Selector implements UiInterface, LayoutInterface {
     public void draw() {
         for (int i = 0; i < items.length; i++) {
             var rect = getBox(i).rl();
-            float hoverScale = hovered == i ? .1f : 0f;
-            var tint = this.selected == i ? Colors.WHITE : Colors.GRAY;
-            UiHelper.drawTextureScale(rect, items[i].getTexture(), this.scale, hoverScale, tint);
-            UiHelper.drawTextureScale(rect, outlineTexture, this.scale, hoverScale, Colors.WHITE);
+            var hoverRect = hovered == i ? UiHelper.scaleCentered(rect, 1.1f) : rect;
+            var tint = this.selected == i ? Colors.BLACK : Colors.GRAY;
+            UiHelper.drawTextureRect(this.items[i].getTexture(), hoverRect, Colors.WHITE);
+            UiHelper.drawTextureRect(outlineTexture, hoverRect, tint);
         }
     }
 

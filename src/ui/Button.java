@@ -11,8 +11,8 @@ public class Button implements UiInterface, LayoutInterface {
     private boolean isHovered = false;
     private boolean isClicked = false;
 
-    public Button(Vector2I pos, Raylib.Texture texture) {
-        this.rect = new RectangleI(pos, new Vector2I(texture.width(), texture.height()));
+    public Button(Raylib.Texture texture) {
+        this.rect = new RectangleI(0, 0, texture.width(), texture.height());
         this.texture = texture;
     }
 
@@ -49,12 +49,19 @@ public class Button implements UiInterface, LayoutInterface {
             isClicked = Raylib.IsMouseButtonPressed(Raylib.MOUSE_BUTTON_LEFT) && inputHandle.tryTakeMouse();
         } else {
             isHovered = false;
+            isClicked = false;
         }
     }
 
     @Override
     public void draw() {
-        UiHelper.drawTextureHover(rect.rl(), texture, isHovered);
+        var hoverRect = isHovered ? UiHelper.scaleCentered(rect.rl(), 1.1f) : rect.rl();
+        UiHelper.drawTextureRect(texture, hoverRect, Colors.WHITE);
+    }
+
+    public void drawInactive() {
+        var hoverRect = isHovered ? UiHelper.scaleCentered(rect.rl(), 1.1f) : rect.rl();
+        UiHelper.drawTextureRect(texture, hoverRect, Raylib.Fade(Colors.WHITE, 0.3f));
     }
 
     public boolean isClicked() {

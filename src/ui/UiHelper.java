@@ -1,30 +1,36 @@
 package src.ui;
 
 import com.raylib.Colors;
+import com.raylib.Helpers;
 import com.raylib.Raylib;
 
 public class UiHelper {
-    public static void drawTextureHover(Raylib.Rectangle rect, Raylib.Texture texture, boolean isHovered) {
-        drawTextureScale(rect, texture, 1, isHovered ? .1f : 0, Colors.WHITE);
+    public static void drawTextureRect(Raylib.Texture texture, Raylib.Rectangle rect, Raylib.Color tint) {
+        Raylib.DrawTexturePro(texture, Helpers.newRectangle(0, 0, texture.width(), texture.height()), rect, new Raylib.Vector2(), 0f, tint);
     }
 
-    public static void drawTextureScale(Raylib.Rectangle rect, Raylib.Texture texture, float defaultScale, float extraScale, Raylib.Color tint) {
-        var pos_adjustment = extraScale / 2 / defaultScale;
-        // Adjust the position of the button when getting bigger to stay centered
-        // Position is top left of the texture
-        Raylib.Vector2 pos = com.raylib.Helpers.newVector2(rect.x() - (pos_adjustment * rect.width()), rect.y() - (pos_adjustment * rect.height()));
-        Raylib.DrawTextureEx(texture, pos, 0, defaultScale + extraScale, tint);
-    }
+    public static Raylib.Rectangle scaleCentered(Raylib.Rectangle rect, float scaleFactor) {
+        var diffX = rect.width() * (scaleFactor - 1f);
+        var diffY = rect.height() * (scaleFactor - 1f);
 
-    public static Raylib.Rectangle scaleRectCentered(Raylib.Rectangle rect, float scale) {
-        var diffX = rect.width() * (scale - 1);
-        var diffY = rect.height() * (scale - 1);
-
-        rect.height(rect.height() + diffX);
-        rect.width(rect.width() + diffY);
+        rect.width(rect.width() + diffX);
+        rect.height(rect.height() + diffY);
         rect.x(rect.x() - diffX / 2);
         rect.y(rect.y() - diffY / 2);
-
         return rect;
+    }
+
+    public static Raylib.Image textImage(String text, int textSize, Raylib.Color color) {
+        int height = textSize + 8;
+        int width = Raylib.MeasureText(text, textSize) + 8;
+        width += width / 10;
+
+        var img = Raylib.GenImageColor(width, height, Colors.BLANK);
+        Raylib.ImageDrawText(img, text, 4, 4, textSize, color);
+        return img;
+    }
+
+    public static Raylib.Texture textTexture(String text, int textSize, Raylib.Color color) {
+        return Raylib.LoadTextureFromImage(textImage(text, textSize, color));
     }
 }

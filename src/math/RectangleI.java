@@ -20,4 +20,8 @@ public class RectangleI {
     public Raylib.Rectangle rl() {
         return Helpers.newRectangle(pos.x, pos.y, size.x, size.y);
     }
+
+    public Vector2I middle() {
+        return new Vector2I(pos.x + size.x / 2, pos.y + size.y / 2);
+    }
 }

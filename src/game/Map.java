@@ -6,30 +6,59 @@ import src.ui.SelItemInterface;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.function.BiConsumer;
 import java.util.Vector;
+import java.util.function.BiConsumer;
 
 import static com.raylib.Raylib.*;
 
 public class Map implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+    private int[] roundSeconds = {10, 20, 30};
+    private int[] roundRewards = {50, 100, 200};
+    private int startDollar = 1000;
+    private MapSpecialty[] specialties;
+    private int width;
+    private int height;
+    private Field[][] fields;
 
-    private final int width;
-    private final int height;
-
-    private final Field[][] fields;
-
-    public Map(int width, int height, FieldType field) {
+    public Map(int width, int height) {
         this.width = width;
         this.height = height;
 
         fields = new Field[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                fields[x][y] = new Field(field);
+                fields[x][y] = new Field(FieldType.GRASS);
             }
         }
+    }
+
+    public int getStartDollar() {
+        return startDollar;
+    }
+
+    public void setStartDollar(int dollar) {
+        this.startDollar = dollar;
+    }
+
+    public void addSpecialty(MapSpecialty specialty) {
+    }
+
+    public void changeSize(int width, int height) {
+        var newFields = new Field[width][height];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (x < this.width && y < this.height) {
+                    newFields[x][y] = fields[x][y];
+                } else {
+                    newFields[x][y] = new Field(FieldType.GRASS);
+                }
+            }
+        }
+        this.fields = newFields;
+        this.width = width;
+        this.height = height;
     }
 
     public Field getField(int x, int y) {
@@ -43,13 +72,14 @@ public class Map implements Serializable {
     public int getHeight() {
         return height;
     }
-    
+
     public void updateFields(Vector<Enemy> enemies) {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-        
+
                 getField(x, y).update(x, y, enemies);
-            }}
+            }
+        }
     }
 
     public void update(InputHandle ih, Camera camera, BiConsumer<Integer, Integer> onFieldClick) {
@@ -59,8 +89,8 @@ public class Map implements Serializable {
         }
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16)) 
-                    && ih.tryTakeMouse()) {
+                if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16))
+                        && ih.tryTakeMouse()) {
                     onFieldClick.accept(x, y);
                 }
             }
@@ -92,8 +122,8 @@ public class Map implements Serializable {
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
-                    if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16)) 
-                        && inputHandle.tryTakeMouse()) {
+                    if (CheckCollisionPointRec(worldMousePos, Helpers.newRectangle(x * 16, y * 16, 16, 16))
+                            && inputHandle.tryTakeMouse()) {
                         if (selected instanceof FieldType) {
                             getField(x, y).type = (FieldType) selected;
                         } else {

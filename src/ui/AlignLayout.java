@@ -25,6 +25,9 @@ public class AlignLayout implements LayoutInterface {
     }
 
     public void add(LayoutInterface e, Align align) {
+        if (e == this) {
+            throw new IllegalArgumentException("Cannot add LayoutInterface to itself");
+        }
         items.add(new AlignItem(e, align));
     }
 
