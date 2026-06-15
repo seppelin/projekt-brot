@@ -6,6 +6,7 @@ import src.math.Vector2I;
 import java.util.ArrayList;
 import java.util.List;
 
+// Layout that stacks multiple layouts on top of each other
 public class StackLayout implements LayoutInterface {
     List<LayoutInterface> items;
 
@@ -28,6 +29,7 @@ public class StackLayout implements LayoutInterface {
 
     @Override
     public void setSpace(RectangleI rect) {
+        // All items get the same space
         for (var i : items) {
             i.setSpaceSafe(rect);
         }
@@ -35,6 +37,7 @@ public class StackLayout implements LayoutInterface {
 
     @Override
     public Vector2I minimum() {
+        // Minimum is the max of all items
         var min = new Vector2I(0, 0);
         for (var i : items) {
             min = i.minimum().max(min);

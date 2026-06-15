@@ -4,15 +4,14 @@ import com.raylib.Helpers;
 import com.raylib.Raylib;
 import src.ui.InputHandle;
 
+// Save scene (placeholder)
 public class SaveScene implements SceneInterface {
     @Override
     public void setup(SceneManager sceneManager) {
-
     }
 
     @Override
     public void update(SceneManager sceneManager, InputHandle inputHandle) {
-
     }
 
     @Override

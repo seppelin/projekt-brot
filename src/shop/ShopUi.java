@@ -9,12 +9,14 @@ import src.ui.LayoutInterface;
 import src.ui.UiHelper;
 import src.ui.UiInterface;
 
+// Shop UI grid
 public class ShopUi implements UiInterface, LayoutInterface {
     static Raylib.Texture texture = Raylib.LoadTexture("resources/Shop.png");
     RectangleI rect = new RectangleI(0, 0, 1600, 900);
     ShopSlot[] slots = new ShopSlot[12];
 
     public ShopUi() {
+        // Create shop slots in grid layout
         for (int i = 0; i < slots.length; i++) {
             var x = i % 4;
             var y = i / 4;
@@ -33,6 +35,7 @@ public class ShopUi implements UiInterface, LayoutInterface {
         return this.rect.size;
     }
 
+    // Get mouse position relative to shop area
     private Raylib.Vector2 getShopMousePosition() {
         var pos = Raylib.GetMousePosition();
         pos.x(pos.x() - this.rect.pos.x);

@@ -9,7 +9,9 @@ import src.ui.InputHandle;
 
 import java.util.Vector;
 
+// Gameplay scene
 public class PlayScene implements SceneInterface {
+    // List of active enemies
     public Vector<Enemy> enemies = new Vector<>();
 
     Camera camera;
@@ -29,12 +31,14 @@ public class PlayScene implements SceneInterface {
     @Override
     public void update(SceneManager sm, InputHandle inputHandle) {
         player.update(inputHandle, this.map);
+        // Update all enemies
         for (var e : enemies) {
             e.update(this.map, this.player.getPosition());
         }
         camera.target(player.getPosition());
         camera.handleResize();
         camera.scrollZoom(inputHandle);
+        // Update map fields
         map.updateFields(this.enemies);
     }
 

@@ -5,6 +5,7 @@ import com.raylib.Raylib;
 import src.math.RectangleI;
 import src.math.Vector2I;
 
+// Text input field UI element
 public class TextInput implements UiInterface, LayoutInterface {
     RectangleI rect;
     int maxLen;
@@ -25,6 +26,7 @@ public class TextInput implements UiInterface, LayoutInterface {
         this.entered = false;
     }
 
+    // Clear input field
     public void resetInput() {
         this.text = "";
         this.isSelected = false;
@@ -65,6 +67,7 @@ public class TextInput implements UiInterface, LayoutInterface {
     @Override
     public void update(InputHandle inputHandle) {
         var mousePos = Raylib.GetMousePosition();
+        // Toggle selection on click
         if (Raylib.CheckCollisionPointRec(mousePos, rect.rl())) {
             if (Raylib.IsMouseButtonPressed(Raylib.MOUSE_BUTTON_LEFT) && inputHandle.tryTakeMouse()) {
                 this.isSelected = !this.isSelected;
@@ -72,11 +75,13 @@ public class TextInput implements UiInterface, LayoutInterface {
         }
 
         entered = false;
+        // Handle escape key to deselect
         if (isSelected && inputHandle.tryTakeEsc()) {
             if (Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
                 this.isSelected = false;
             }
         }
+        // Handle text input
         if (isSelected && inputHandle.tryTakeKeyBoard()) {
             char c = (char) Raylib.GetCharPressed();
             if (c != 0 && text.length() < maxLen) {

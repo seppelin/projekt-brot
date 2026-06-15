@@ -8,7 +8,7 @@ import src.ui.Align;
 import src.ui.AlignLayout;
 import src.ui.InputHandle;
 
-
+// Shop UI scene
 public class ShopScene implements SceneInterface {
     Raylib.Color shopBackground = Helpers.newColor(160, 110, 74, 255);
     ShopUi shopUi = new ShopUi();
@@ -16,6 +16,7 @@ public class ShopScene implements SceneInterface {
     public ShopScene() {
     }
 
+    @Override
     public void setup(SceneManager sceneManager) {
         var layout = new AlignLayout(0, Align.Middle, new Vector2I(0, 0));
         layout.add(shopUi, Align.Middle);
@@ -27,6 +28,7 @@ public class ShopScene implements SceneInterface {
     public void update(SceneManager sceneManager, InputHandle inputHandle) {
     }
 
+    @Override
     public void draw() {
         Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), shopBackground);
     }

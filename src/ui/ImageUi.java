@@ -5,6 +5,7 @@ import com.raylib.Raylib;
 import src.math.RectangleI;
 import src.math.Vector2I;
 
+// Non-interactive image UI element
 public class ImageUi implements UiInterface, LayoutInterface {
     RectangleI rect;
     Raylib.Texture texture;

@@ -1,5 +1,6 @@
 package src.ui;
 
+// Item in an alignment layout
 public class AlignItem {
     LayoutInterface iface;
     Align align;

@@ -1,7 +1,5 @@
 package src.scenes;
 
-// Todo: make a simple editor for the map
-
 import com.raylib.Colors;
 import com.raylib.Raylib;
 import src.edit.EditSelect;
@@ -13,6 +11,7 @@ import src.game.Map;
 import src.math.Vector2I;
 import src.ui.*;
 
+// Map editor scene
 public class EditScene implements SceneInterface {
     Camera camera;
     Map map;
@@ -50,6 +49,7 @@ public class EditScene implements SceneInterface {
 
     @Override
     public void update(SceneManager sm, InputHandle inputHandle) {
+        // Save map when button clicked
         if (saveButton.isClicked()) {
             MapLoader.saveMap(this.mapName, map);
         }
@@ -60,6 +60,7 @@ public class EditScene implements SceneInterface {
         map.update(inputHandle, camera, this::onMapFieldClick);
     }
 
+    // Handle field click - apply selected tool
     public void onMapFieldClick(Integer x, Integer y) {
         var sel = this.editSelect.selector.getSelected();
         switch (this.editSelect.state) {

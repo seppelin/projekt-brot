@@ -5,6 +5,7 @@ import com.raylib.Raylib;
 import src.math.RectangleI;
 import src.math.Vector2I;
 
+// Clickable button UI element
 public class Button implements UiInterface, LayoutInterface {
     private final Raylib.Texture texture;
     private RectangleI rect;
@@ -16,6 +17,7 @@ public class Button implements UiInterface, LayoutInterface {
         this.texture = texture;
     }
 
+    // Create button from text
     public Button(String text, int textSize) {
         int height = textSize + 8;
         int width = Raylib.MeasureText(text, textSize) + 8;
@@ -27,6 +29,7 @@ public class Button implements UiInterface, LayoutInterface {
         this.texture = Raylib.LoadTextureFromImage(img);
     }
 
+    // Create button with custom colors
     public Button(Vector2I pos, String text, int textSize, Raylib.Color textColor, Raylib.Color backgroundColor) {
         int height = textSize + 8;
         int width = Raylib.MeasureText(text, textSize) + 8;
@@ -59,6 +62,7 @@ public class Button implements UiInterface, LayoutInterface {
         UiHelper.drawTextureRect(texture, hoverRect, Colors.WHITE);
     }
 
+    // Draw button as inactive (faded)
     public void drawInactive() {
         var hoverRect = isHovered ? UiHelper.scaleCentered(rect.rl(), 1.1f) : rect.rl();
         UiHelper.drawTextureRect(texture, hoverRect, Raylib.Fade(Colors.WHITE, 0.3f));

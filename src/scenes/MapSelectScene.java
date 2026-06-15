@@ -8,12 +8,12 @@ import src.ui.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+// Scene for selecting a map to play or edit
 public class MapSelectScene implements SceneInterface {
     ArrayList<Button> mapButtons = new ArrayList<>();
     ArrayList<String> names;
 
     Button create;
-
     Consumer<String> onSelect;
 
     public MapSelectScene(Consumer<String> onSelect, boolean mapCreation) {
@@ -31,6 +31,7 @@ public class MapSelectScene implements SceneInterface {
             mapLayout.add(label, Align.Start);
             sceneManager.addUiElement(label);
         }
+        // Load and create buttons for each map
         this.names = MapLoader.getMapList();
         for (var name : names) {
             var button = new Button(name, 32);
@@ -47,12 +48,14 @@ public class MapSelectScene implements SceneInterface {
 
     @Override
     public void update(SceneManager sceneManager, InputHandle inputHandle) {
+        // Check if map button was clicked
         for (int i = 0; i < this.mapButtons.size(); i++) {
             var button = this.mapButtons.get(i);
             if (button.isClicked()) {
                 onSelect.accept(this.names.get(i));
             }
         }
+        // Check if create button was clicked
         if (create != null) {
             if (create.isClicked()) {
                 sceneManager.pushScene(new CreateMapScene(this.onSelect));

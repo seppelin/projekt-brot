@@ -3,6 +3,7 @@ package src.math;
 import com.raylib.Helpers;
 import com.raylib.Raylib;
 
+// Integer-based rectangle class
 public class RectangleI {
     public Vector2I pos;
     public Vector2I size;
@@ -17,10 +18,12 @@ public class RectangleI {
         this.size = size;
     }
 
+    // Convert to raylib Rectangle
     public Raylib.Rectangle rl() {
         return Helpers.newRectangle(pos.x, pos.y, size.x, size.y);
     }
 
+    // Get center point of rectangle
     public Vector2I middle() {
         return new Vector2I(pos.x + size.x / 2, pos.y + size.y / 2);
     }

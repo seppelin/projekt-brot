@@ -6,16 +6,17 @@ import src.math.Vector2I;
 import java.util.ArrayList;
 import java.util.List;
 
+// Layout that aligns items in a direction (horizontal or vertical)
 public class AlignLayout implements LayoutInterface {
-    // 0 is x direction, 1 is y direction
+    // Direction: 0=horizontal (x), 1=vertical (y)
     RectangleI rect;
     int direction;
     List<AlignItem> items;
-    Align crossAlign;
+    Align crossAlign; // Alignment perpendicular to direction
     Vector2I padding;
 
     /**
-     * @param direction if 0 this is an Alignment in x direction, if 1 it is y
+     * @param direction if 0 this is an alignment in x direction, if 1 it is y
      */
     public AlignLayout(int direction, Align crossAlign, Vector2I padding) {
         this.padding = padding;
@@ -24,6 +25,7 @@ public class AlignLayout implements LayoutInterface {
         this.items = new ArrayList<>();
     }
 
+    // Add element to layout with alignment
     public void add(LayoutInterface e, Align align) {
         if (e == this) {
             throw new IllegalArgumentException("Cannot add LayoutInterface to itself");
@@ -31,12 +33,14 @@ public class AlignLayout implements LayoutInterface {
         items.add(new AlignItem(e, align));
     }
 
+    // Remove element from layout
     public void remove(LayoutInterface e) {
         items.removeIf(alignItem -> alignItem.iface == e);
     }
 
+    // Calculate total space used by items with given alignment
     private int getAlignSpace(Align align) {
-        var size = 0;
+        int size = 0;
         for (var i : items) {
             if (i.align == align) {
                 size += padding.get(direction);
@@ -46,8 +50,10 @@ public class AlignLayout implements LayoutInterface {
         return size;
     }
 
+    // Distribute space among items
     private void distributeSpace() {
         int spaceLeft = this.rect.size.get(direction) - this.padding.get(direction);
+        // Assign minimum space to each item
         for (var i : items) {
             var toAssign = i.iface.minimum().get(direction);
             i.assignedSpace = toAssign;
@@ -59,6 +65,7 @@ public class AlignLayout implements LayoutInterface {
             return;
         }
 
+        // Distribute extra space based on greed
         float totalGreed = 0;
         for (var i : items) {
             totalGreed += i.iface.extraSpaceGreed();
@@ -77,11 +84,13 @@ public class AlignLayout implements LayoutInterface {
         }
     }
 
+    // Calculate cross-alignment size
     private int getCrossAlignSize(Vector2I max) {
         var rectNotDirSize = rect.size.get(direction ^ 1);
         return Math.min(max.get(direction ^ 1), rectNotDirSize);
     }
 
+    // Calculate cross-alignment position
     private int getCrossAlignPos(int crossAlignSize) {
         var crossAlignPadding = padding.get(direction ^ 1);
         float align = 0;
@@ -95,6 +104,7 @@ public class AlignLayout implements LayoutInterface {
         return Math.round(empty * align) + crossAlignPadding;
     }
 
+    // Set space for items with given alignment
     private void setSpaceAlign(int alignPos, Align align) {
         for (var i : items) {
             if (i.align == align) {
@@ -117,11 +127,9 @@ public class AlignLayout implements LayoutInterface {
         }
     }
 
-
     @Override
     public void setSpace(RectangleI rect) {
         this.rect = rect;
-
         distributeSpace();
 
         var startPos = padding.get(direction);

@@ -1,5 +1,6 @@
 package src.ui;
 
+// Alignment options for layouts
 public enum Align {
     Start,
     Middle,

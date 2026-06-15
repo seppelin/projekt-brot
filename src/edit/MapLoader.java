@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 
 public class MapLoader {
+    // Get list of all available map names
     public static ArrayList<String> getMapList() {
         var names = new ArrayList<String>();
-
         var mapDir = Paths.get("resources/maps");
 
         try (Stream<Path> stream = Files.list(mapDir)) {
@@ -26,6 +26,7 @@ public class MapLoader {
         return names;
     }
 
+    // Load a map from file
     public static Map getMap(String mapName) {
         Map map;
         try (var in = new ObjectInputStream(new FileInputStream("resources/maps/" + mapName + ".mapdata"))) {
@@ -36,6 +37,7 @@ public class MapLoader {
         return map;
     }
 
+    // Save a map to file
     public static void saveMap(String mapName, Map map) {
         try (var out = new ObjectOutputStream(new FileOutputStream("resources/maps/" + mapName + ".mapdata"))) {
             out.writeObject(map);

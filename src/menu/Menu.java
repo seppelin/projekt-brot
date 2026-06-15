@@ -12,6 +12,7 @@ public class Menu {
     static Raylib.Texture shopImage = Raylib.LoadTexture("resources/Lobby.png");
     static Raylib.Texture lobbyGrass = Raylib.LoadTexture("resources/LobbyGrass.png");
 
+    // Menu interaction icons
     MenuIcon[] options = {
             new MenuIcon(
                     new RectangleI(210, 70, 32, 32),
@@ -30,6 +31,7 @@ public class Menu {
     Player player = new Player(14, 12);
     Camera camera = new Camera(160, 160, 4);
 
+    // Update menu state
     public void update(InputHandle ih) {
         player.updateNoMap(ih);
         camera.target(player.getPosition());
@@ -41,6 +43,7 @@ public class Menu {
         }
     }
 
+    // Draw menu scene
     public void draw() {
         Raylib.BeginMode2D(camera);
         drawInfiniteFields();
@@ -54,11 +57,13 @@ public class Menu {
         drawCoordinates();
     }
 
+    // Draw player coordinates for debugging
     private void drawCoordinates() {
         var pos = player.getPosition();
         Raylib.DrawText("x:" + Math.floor(pos.x()) + " y:" + Math.floor(pos.y()), 200, 10, 20, Colors.BLACK);
     }
 
+    // Draw infinitely tiled background
     private void drawInfiniteFields() {
         var start = Raylib.GetScreenToWorld2D(Helpers.newVector2(0, 0), camera);
         var end = Raylib.GetScreenToWorld2D(Helpers.newVector2(Raylib.GetScreenWidth(), Raylib.GetScreenHeight()), camera);

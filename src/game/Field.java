@@ -14,13 +14,14 @@ public class Field implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    FieldType type;
-    ItemType item;
+    private FieldType type;
+    private ItemType item;
 
     public Field(FieldType type) {
         this.type = type;
     }
     
+    // Update field state (spawn enemies from spawner)
     public void update(int x, int y, Vector<Enemy> enemies) {
         if (item == ItemType.Spawner && Math.random() > 0.998) {
             enemies.add(new Enemy(x, y));
@@ -39,6 +40,7 @@ public class Field implements Serializable {
         this.item = item;
     }
 
+    // Draw field and item on it
     public void draw(int x, int y) {
         Raylib.DrawTexture(type.texture, x, y, Colors.WHITE);
         if (item != null) {

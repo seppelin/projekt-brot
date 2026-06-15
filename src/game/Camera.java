@@ -10,25 +10,26 @@ public class Camera extends Raylib.Camera2D {
     private boolean dragged = false;
 
     public Camera(float targetX, float targetY, float zoom) {
-        // Offset the camera by half the screen size to center the target
+        // Center the camera on the target
         offset(calcOffset());
-        // The target is the player, the camera follows him
         target(Helpers.newVector2(targetX, targetY));
-        // Setting the rotation to 0 and the zoom to 1
         rotation(0);
         zoom(zoom);
     }
 
+    // Calculate camera offset to center on screen
     public Raylib.Vector2 calcOffset() {
         return Helpers.newVector2((float) Raylib.GetScreenWidth() / 2, (float) Raylib.GetScreenHeight() / 2);
     }
 
+    // Update camera when window is resized
     public void handleResize() {
         if (Raylib.IsWindowResized()) {
             offset(calcOffset());
         }
     }
 
+    // Handle camera zoom with mouse wheel
     public void scrollZoom(InputHandle inputHandle) {
         var wheelMove = GetMouseWheelMove();
         if (wheelMove != 0 && inputHandle.tryTakeScroll()) {
@@ -38,13 +39,14 @@ public class Camera extends Raylib.Camera2D {
         }
     }
 
-    public void mouseMove(InputHandle  inputHandle) {
+    // Handle camera panning with mouse drag
+    public void mouseMove(InputHandle inputHandle) {
         if (Raylib.IsMouseButtonPressed(Raylib.MOUSE_BUTTON_LEFT) && inputHandle.tryTakeMouse()) {
             dragged = true;
         }
         if (dragged && Raylib.IsMouseButtonDown(Raylib.MOUSE_BUTTON_LEFT)) {
             var delta = Raylib.GetMouseDelta();
-            delta = Raylib.Vector2Scale(delta, 1/zoom());
+            delta = Raylib.Vector2Scale(delta, 1 / zoom());
             var newTarget = Raylib.Vector2Subtract(target(), delta);
             target(newTarget);
         } else {

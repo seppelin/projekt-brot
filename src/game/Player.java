@@ -1,6 +1,5 @@
 package src.game;
 
-
 import com.raylib.Colors;
 import com.raylib.Helpers;
 import src.ui.InputHandle;
@@ -13,7 +12,7 @@ public class Player {
 
     public Player(int startX, int startY) {
         velocity = new Vector2();
-        // Position of the player in pixel, 16px one field
+        // Convert grid position to pixel coordinates (16px per field)
         position = Helpers.newVector2(startX * 16, startY * 16);
     }
 
@@ -21,9 +20,9 @@ public class Player {
         return position;
     }
 
+    // Handle player movement input
     private void handleInput(InputHandle ih) {
         velocity = Helpers.newVector2(0, 0);
-        // Todo: handle input of player
         if (IsKeyDown(KEY_W)) {
             velocity.y(-1);
         }
@@ -40,6 +39,7 @@ public class Player {
         velocity = Vector2Scale(velocity, 1);
     }
 
+    // Update position without map collision (for menu)
     public void updateNoMap(InputHandle ih) {
         var start1 = Helpers.newVector2(174, 114);
         var end1 = Helpers.newVector2(274, 193);
@@ -50,14 +50,14 @@ public class Player {
         var oldPos = position;
         position = Vector2Add(position, velocity);
 
-        // Prevent clipping in between
+        // Prevent clipping between zones
         var oldBigger = oldPos.y() - 193 > 0;
         var newBigger = position.y() - 193 > 0;
         if (oldBigger != newBigger && (oldPos.x() < start1.x() || oldPos.x() > end2.x())) {
             position.y(oldPos.y());
         }
 
-        // Normal boarders
+        // Clamp position to boundaries
         if (position.y() <= 193) {
             position = Vector2Clamp(position, start1, end1);
         } else {
@@ -65,15 +65,14 @@ public class Player {
         }
     }
 
+    // Update position with map collision checking
     public void update(InputHandle inputHandle, Map map) {
         handleInput(inputHandle);
-
         position = Vector2Add(position, velocity);
         position = map.nearestValidPosition(position);
     }
 
     public void draw() {
-        // Todo: draw the player
         DrawCircleV(position, 5, Colors.BLACK);
     }
 }

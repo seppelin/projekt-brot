@@ -10,6 +10,7 @@ import src.ui.UiInterface;
 
 import java.util.ArrayList;
 
+// Manages scene stack and rendering loop
 public class SceneManager {
     private final ArrayList<SceneInterface> sceneStack;
     private final ArrayList<UiInterface> uiInterfaces;
@@ -25,35 +26,36 @@ public class SceneManager {
         this.changeScene(scene);
     }
 
+    // Start the game loop with initial scene
     public static void startGame(SceneInterface scene) {
         SceneManager sceneManager = new SceneManager(scene);
         sceneManager.run();
     }
 
+    // Main game loop
     private void run() {
         while (!quit && !Raylib.WindowShouldClose()) {
-            // compute layout
             layout();
-
-            // update the scene
             update();
-
             draw();
         }
     }
 
+    // Layout UI elements
     private void layout() {
         var rect = new RectangleI(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
         this.rootLayout.setSpaceSafe(rect);
     }
 
+    // Update scene and UI
     private void update() {
         InputHandle ih = new InputHandle();
-        // Ui before the rest since on top
+        // UI updates first (rendered on top)
         for (UiInterface uiInterface : uiInterfaces) {
             uiInterface.update(ih);
         }
         scene.update(this, ih);
+        // Handle escape key
         if (ih.tryTakeEsc() && Raylib.IsKeyPressed(Raylib.KEY_ESCAPE)) {
             if (sceneStack.isEmpty()) {
                 quitGame();
@@ -63,10 +65,11 @@ public class SceneManager {
         }
     }
 
+    // Render scene and UI
     private void draw() {
         Raylib.BeginDrawing();
         Raylib.ClearBackground(Colors.RAYWHITE);
-        // Ui after the rest since on top
+        // Draw scene first, UI on top
         scene.draw();
         for (UiInterface uiInterface : uiInterfaces) {
             uiInterface.draw();
@@ -90,6 +93,7 @@ public class SceneManager {
         quit = true;
     }
 
+    // Change to new scene
     public void changeScene(SceneInterface scene) {
         this.scene = scene;
         this.uiInterfaces.clear();
@@ -98,7 +102,7 @@ public class SceneManager {
         var min = this.rootLayout.minimum();
         Raylib.SetWindowMinSize(min.x, min.y);
 
-        // Simple hack to simulate the start of the loop cycle
+        // Initial frame
         Raylib.BeginDrawing();
         Raylib.EndDrawing();
 
@@ -106,6 +110,7 @@ public class SceneManager {
         update();
     }
 
+    // Push scene to stack and change to new scene
     public void pushScene(SceneInterface scene) {
         this.sceneStack.add(this.scene.cloneScene());
         changeScene(scene);

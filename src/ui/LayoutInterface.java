@@ -3,21 +3,22 @@ package src.ui;
 import src.math.RectangleI;
 import src.math.Vector2I;
 
+// Interface for layout containers
 public interface LayoutInterface {
+    // Set space allocated for this layout
     void setSpace(RectangleI rect);
 
+    // Get minimum space required
     Vector2I minimum();
 
     /**
-     * @return returns the greed you want extra space with
-     * if 0 you are fixed size
-     * there is only fixed size and infinite growing
-     * default is 1
+     * @return greediness for extra space (0=fixed, 1+=grows)
      */
     default float extraSpaceGreed() {
         return 1;
     }
 
+    // Set space with validation
     default void setSpaceSafe(RectangleI rect) {
         Vector2I min = minimum();
         if (min.x > rect.size.x || min.y > rect.size.y) {

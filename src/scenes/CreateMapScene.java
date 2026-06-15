@@ -34,10 +34,11 @@ public class CreateMapScene implements SceneInterface {
 
     @Override
     public void update(SceneManager sceneManager, InputHandle inputHandle) {
+        // Create and save new map when name is entered
         if (name.isEntered()) {
             var map = new Map(20, 20);
             MapLoader.saveMap(name.getText(), map);
-            onSelect.accept(this.name.getText());
+            onSelect.accept(name.getText());
         }
     }
 

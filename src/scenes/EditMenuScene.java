@@ -3,12 +3,12 @@ package src.scenes;
 import src.menu.Menu;
 import src.ui.InputHandle;
 
+// Scene showing the lobby/menu area
 public class EditMenuScene implements SceneInterface {
     Menu menu = new Menu();
 
     @Override
     public void setup(SceneManager sceneManager) {
-
     }
 
     @Override

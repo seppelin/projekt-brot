@@ -6,7 +6,7 @@ import src.math.Vector2I;
 import src.ui.Button;
 import src.ui.InputHandle;
 
-
+// Main menu scene
 public class MenuScene implements SceneInterface {
     Button playButton;
     Button editButton;
@@ -33,25 +33,30 @@ public class MenuScene implements SceneInterface {
 
     @Override
     public void update(SceneManager sm, InputHandle inputHandle) {
+        // Go to lobby/menu
         if (newMenu.isClicked()) {
             sm.pushScene(new EditMenuScene());
         }
 
+        // Go to play game
         if (playButton.isClicked()) {
             sm.pushScene(new MapSelectScene((mapName ->
                     sm.changeScene(new PlayScene(MapLoader.getMap(mapName)))), false)
             );
         }
 
+        // Go to edit map
         if (editButton.isClicked()) {
             sm.pushScene(new MapSelectScene((mapName ->
                     sm.changeScene(new EditScene(MapLoader.getMap(mapName), mapName))), true));
         }
 
+        // Exit game
         if (exitButton.isClicked()) {
             sm.quitGame();
         }
 
+        // Go to shop
         if (shopButton.isClicked()) {
             sm.pushScene(new ShopScene());
         }

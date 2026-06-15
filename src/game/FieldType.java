@@ -1,12 +1,12 @@
 package src.game;
 
-
 import com.raylib.Colors;
 import com.raylib.Raylib;
 import src.ui.SelItemInterface;
 
 import java.io.Serializable;
 
+// Types of map fields
 public enum FieldType implements SelItemInterface, Serializable {
     GRASS(0, "grass", true, "resources/fields/grass.png"),
     WATER(1, "water", false, "resources/fields/water.png"),
@@ -22,7 +22,7 @@ public enum FieldType implements SelItemInterface, Serializable {
         this.id = id;
         this.name = name;
         this.walkable = walkable;
-        // This only loads once when the game starts
+        // Load texture once during initialization
         if (path.isEmpty()) {
             var img = Raylib.GenImageColor(16, 16, Colors.BLANK);
             texture = Raylib.LoadTextureFromImage(img);
@@ -31,6 +31,7 @@ public enum FieldType implements SelItemInterface, Serializable {
         }
     }
 
+    // Get field type by id
     public static FieldType getById(int id) {
         for (FieldType type : FieldType.values()) {
             if (type.id == id) {

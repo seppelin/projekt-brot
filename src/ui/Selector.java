@@ -6,6 +6,7 @@ import com.raylib.Raylib;
 import src.math.RectangleI;
 import src.math.Vector2I;
 
+// Grid selector for choosing items
 public class Selector implements UiInterface, LayoutInterface {
     static Raylib.Texture outlineTexture;
 
@@ -18,6 +19,7 @@ public class Selector implements UiInterface, LayoutInterface {
     float scale;
 
     public Selector(Vector2I pos, int itemsPerRow, SelItemInterface[] items, float scale) {
+        // Create outline texture once
         if (outlineTexture == null) {
             var img = Raylib.GenImageColor(16, 16, Colors.BLANK);
             Raylib.ImageDrawRectangleLines(img, Helpers.newRectangle(0, 0, 16, 16), 1, Colors.WHITE);
@@ -32,6 +34,7 @@ public class Selector implements UiInterface, LayoutInterface {
         clicked = -1;
     }
 
+    // Change available items
     public void setItems(SelItemInterface[] items) {
         this.items = items;
         this.selected = 0;
@@ -43,6 +46,7 @@ public class Selector implements UiInterface, LayoutInterface {
         return items[selected];
     }
 
+    // Get local box for item at index
     private RectangleI getLocalBox(int i) {
         var x = i % this.itemsPerRow;
         var y = i / this.itemsPerRow;
@@ -50,6 +54,7 @@ public class Selector implements UiInterface, LayoutInterface {
         return new RectangleI(Math.round(x * 16 * 1.1F * scale), Math.round(y * 16 * 1.1F * scale), size, size);
     }
 
+    // Get world box for item at index
     private RectangleI getBox(int i) {
         var rect = getLocalBox(i);
         rect.pos = rect.pos.add(pos);
@@ -77,12 +82,12 @@ public class Selector implements UiInterface, LayoutInterface {
         for (int i = 0; i < items.length; i++) {
             var rect = getBox(i).rl();
             var hoverRect = hovered == i ? UiHelper.scaleCentered(rect, 1.1f) : rect;
+            // Selected item is black outline, others are gray
             var tint = this.selected == i ? Colors.BLACK : Colors.GRAY;
             UiHelper.drawTextureRect(this.items[i].getTexture(), hoverRect, Colors.WHITE);
             UiHelper.drawTextureRect(outlineTexture, hoverRect, tint);
         }
     }
-
 
     @Override
     public void setSpace(RectangleI rect) {
