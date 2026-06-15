@@ -1,5 +1,6 @@
 package src;
 
+import src.game.Loadout;
 import src.scenes.MenuScene;
 import src.scenes.SceneManager;
 
@@ -16,6 +17,7 @@ public class Main {
 
         SetExitKey(0);
 
+        Loadout.init();
         SceneManager.startGame(new MenuScene());
 
         CloseWindow();

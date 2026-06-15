@@ -1,57 +1,34 @@
 package src.scenes;
 
-import com.raylib.Colors;
+import com.raylib.Helpers;
 import com.raylib.Raylib;
-import src.game.Camera;
-import src.game.Map;
-import src.game.Player;
 import src.math.Vector2I;
-import src.ui.Button;
+import src.shop.ShopUi;
+import src.ui.Align;
+import src.ui.AlignLayout;
 import src.ui.InputHandle;
 
 
 public class ShopScene implements SceneInterface {
-    Button MenuButton;
-    Map Shopmap;
-    Player player;
-    Camera camera;
-    Raylib.Texture tex;
+    Raylib.Color shopBackground = Helpers.newColor(160, 110, 74, 255);
+    ShopUi shopUi = new ShopUi();
 
     public ShopScene() {
-        MenuButton = new Button(new Vector2I(20, 20), "Menu", 32, Colors.BLACK, Colors.BLANK);
-        Shopmap = new Map(20, 20);
-        player = new Player(Shopmap.getWidth() / 2, Shopmap.getHeight() / 4);
-        camera = new Camera(100, 100, 3);
-        tex = Raylib.LoadTexture("resources/Schanze.jpg");
-
     }
 
     public void setup(SceneManager sceneManager) {
-        sceneManager.addUiElement(MenuButton);
+        var layout = new AlignLayout(0, Align.Middle, new Vector2I(0, 0));
+        layout.add(shopUi, Align.Middle);
+        sceneManager.setRootLayout(layout);
+        sceneManager.addUiElement(shopUi);
     }
 
     @Override
     public void update(SceneManager sceneManager, InputHandle inputHandle) {
-        if (MenuButton.isClicked()) {
-            sceneManager.pushScene(new MenuScene());
-        }
-        //Shop Fenster öffnen
-        Shopmap.update(inputHandle, camera, (a, b) -> {
-        });
-        player.update(inputHandle, Shopmap);
-        camera.target(player.getPosition());
-        camera.handleResize();
-        camera.scrollZoom(inputHandle);
     }
 
     public void draw() {
-
-        Raylib.BeginMode2D(camera);
-        Raylib.DrawTexture(tex, 0, 0, Colors.WHITE);
-        //Shopmap.draw();
-        player.draw();
-        Raylib.EndMode2D();
-
+        Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), shopBackground);
     }
 
     @Override
