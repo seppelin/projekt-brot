@@ -4,5 +4,7 @@ package src.game;
 public enum WeaponType {
     Fist,
     Knife,
-    Shotgun
+    Shotgun,
+    Minigun,
+    RainersKatana,
 }
