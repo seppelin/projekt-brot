@@ -1,7 +1,7 @@
 package src;
 
 import src.game.Loadout;
-import src.scenes.MenuScene;
+import src.scenes.EditMenuScene;
 import src.scenes.SceneManager;
 
 import static com.raylib.Raylib.*;
@@ -22,7 +22,7 @@ public class Main {
 
         // Load game data and start main menu
         Loadout.init();
-        SceneManager.startGame(new MenuScene());
+        SceneManager.startGame(new EditMenuScene());
 
         // Clean up
         CloseWindow();

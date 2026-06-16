@@ -48,7 +48,8 @@ public class MenuScene implements SceneInterface {
         // Go to edit map
         if (editButton.isClicked()) {
             sm.pushScene(new MapSelectScene((mapName ->
-                    sm.changeScene(new EditScene(MapLoader.getMap(mapName), mapName))), true));
+                    sm.changeScene(new EditScene(MapLoader.getMap(mapName), mapName))), true)
+            );
         }
 
         // Exit game

@@ -13,7 +13,7 @@ public class EditMenuScene implements SceneInterface {
 
     @Override
     public void update(SceneManager sceneManager, InputHandle inputHandle) {
-        menu.update(inputHandle);
+        menu.update(sceneManager, inputHandle);
     }
 
     @Override

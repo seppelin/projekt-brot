@@ -3,9 +3,11 @@ package src.menu;
 import com.raylib.Colors;
 import com.raylib.Helpers;
 import com.raylib.Raylib;
+import src.edit.MapLoader;
 import src.game.Camera;
 import src.game.Player;
 import src.math.RectangleI;
+import src.scenes.*;
 import src.ui.InputHandle;
 
 public class Menu {
@@ -20,11 +22,15 @@ public class Menu {
             ),
             new MenuIcon(
                     new RectangleI(110, 210, 32, 32),
-                    Raylib.LoadTexture("resources/FightIcon.jpg")
+                    Raylib.LoadTexture("resources/FightIcon.png")
             ),
             new MenuIcon(
                     new RectangleI(290, 147, 32, 32),
                     Raylib.LoadTexture("resources/Loadout.png")
+            ),
+            new MenuIcon(
+                    new RectangleI(110, 130, 32, 32),
+                    Raylib.LoadTexture("resources/EditIcon.png")
             )
     };
 
@@ -32,7 +38,7 @@ public class Menu {
     Camera camera = new Camera(160, 160, 4);
 
     // Update menu state
-    public void update(InputHandle ih) {
+    public void update(SceneManager sm, InputHandle ih) {
         player.updateNoMap(ih);
         camera.target(player.getPosition());
         camera.handleResize();
@@ -40,6 +46,22 @@ public class Menu {
 
         for (MenuIcon option : options) {
             option.update(ih, player.getPosition());
+        }
+        if (options[0].isInteracted()) {
+            sm.pushScene(new ShopScene());
+        }
+        if (options[1].isInteracted()) {
+            sm.pushScene(new MapSelectScene((mapName ->
+                    sm.changeScene(new PlayScene(MapLoader.getMap(mapName)))), false)
+            );
+        }
+        if (options[2].isInteracted()) {
+
+        }
+        if (options[3].isInteracted()) {
+            sm.pushScene(new MapSelectScene((mapName ->
+                    sm.changeScene(new EditScene(MapLoader.getMap(mapName), mapName))), true)
+            );
         }
     }
 
@@ -53,8 +75,6 @@ public class Menu {
         }
         player.draw();
         Raylib.EndMode2D();
-
-        drawCoordinates();
     }
 
     // Draw player coordinates for debugging
