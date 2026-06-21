@@ -1,35 +1,57 @@
 package src.game;
 
 import com.raylib.Colors;
-import com.raylib.Helpers;
-import src.ui.InputHandle;
+import src.scenes.PlayScene;
 
 import static com.raylib.Raylib.*;
 
-public class Enemy {
+public class Enemy implements Target {
+    PlayScene play;
+    private int health;
     private Vector2 position;
     private Vector2 velocity;
 
-    public Enemy(int startX, int startY) {
+    public Enemy(PlayScene play, Vector2 position, int health) {
+        this.play = play;
         velocity = new Vector2();
         // Convert grid position to pixel coordinates (16px per field)
-        position = Helpers.newVector2(startX * 16, startY * 16);
+        this.position = position;
+        this.health = health;
+    }
+
+    @Override
+    public boolean existing() {
+        return health > 0;
     }
 
     public Vector2 getPosition() {
         return position;
     }
 
+    @Override
+    public void dealDamage(int damage) {
+        this.health -= damage;
+    }
+
     // Update enemy position, moving towards target
-    public void update(Map map, Vector2 target) {
+    public boolean update() {
+        if (!existing()) {
+            return true;
+        }
+        var brotPos = play.getNearestBrotPos(position);
         // Calculate direction to target
-        velocity = Vector2Subtract(target, position);
+        velocity = Vector2Subtract(brotPos, position);
         // Normalize direction and set speed
         velocity = Vector2Normalize(velocity);
         velocity = Vector2Scale(velocity, 0.5f);
         // Move and snap to valid position
         position = Vector2Add(position, velocity);
-        position = map.nearestValidPosition(position);
+        position = play.getMap().nearestValidPosition(position);
+
+        if (Vector2Distance(brotPos, position) < 4) {
+            play.breadFound();
+        }
+        return false;
     }
 
     public void draw() {

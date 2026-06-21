@@ -4,9 +4,9 @@ import com.raylib.Colors;
 import com.raylib.Raylib;
 import src.edit.EditSelect;
 import src.edit.MapLoader;
+import src.game.BuildingType;
 import src.game.Camera;
 import src.game.FieldType;
-import src.game.ItemType;
 import src.game.Map;
 import src.math.Vector2I;
 import src.ui.*;
@@ -64,8 +64,8 @@ public class EditScene implements SceneInterface {
     public void onMapFieldClick(Integer x, Integer y) {
         var sel = this.editSelect.selector.getSelected();
         switch (this.editSelect.state) {
-            case FieldType -> map.getField(x, y).setType((FieldType) sel);
-            case Building -> map.getField(x, y).setItem((ItemType) sel);
+            case FieldType -> map.getField(x, y).type = (FieldType) sel;
+            case Building -> map.setBuilding(x, y, (BuildingType) sel);
             case FillField -> map.batchUpdate(x, y, (FieldType) sel, null);
         }
     }

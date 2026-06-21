@@ -1,12 +1,13 @@
 package src.game;
 
 import com.raylib.Helpers;
+import src.math.Vector2I;
+import src.scenes.PlayScene;
 import src.ui.InputHandle;
 import src.ui.SelItemInterface;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Vector;
 import java.util.function.BiConsumer;
 
 import static com.raylib.Raylib.*;
@@ -15,8 +16,9 @@ public class Map implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private int[] roundSeconds = {10, 20, 30};
-    private int[] roundRewards = {50, 100, 200};
-    private int startDollar = 1000;
+    private int[] roundMoney = {50, 100, 200};
+    private float[] roundSpawnRate = {1, 1.5f, 2};
+    private int gemReward = 50;
     private MapSpecialty[] specialties;
     private int width;
     private int height;
@@ -34,15 +36,69 @@ public class Map implements Serializable {
         }
     }
 
-    public int getStartDollar() {
-        return startDollar;
+    public void setBuilding(int x, int y, BuildingType building) {
+        var field = getField(x, y);
+        if (field.isWalkable()) {
+            field.item = building;
+        }
     }
 
-    public void setStartDollar(int dollar) {
-        this.startDollar = dollar;
+    public boolean setPlayerBuilding(int x, int y, BuildingType building) {
+        var field = getField(x, y);
+        if (field.isWalkable() && field.item == null) {
+            field.item = building;
+            return true;
+        }
+        return false;
+    }
+
+    public int[] getRoundSeconds() {
+        return roundSeconds;
+    }
+
+    public void setRoundSeconds(int[] roundSeconds) {
+        this.roundSeconds = roundSeconds;
+    }
+
+    public int[] getRoundMoney() {
+        return roundMoney;
+    }
+
+    public void setRoundMoney(int[] roundMoney) {
+        this.roundMoney = roundMoney;
+    }
+
+    public float[] getRoundSpawnRate() {
+        return roundSpawnRate;
+    }
+
+    public void setRoundSpawnRate(float[] roundSpawnRate) {
+        this.roundSpawnRate = roundSpawnRate;
+    }
+
+    public MapSpecialty[] getSpecialties() {
+        return specialties;
+    }
+
+    public void setupPlayScene(PlayScene playScene) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                var field = getField(x, y);
+                if (field.item != null) {
+                    switch (field.item) {
+                        case Spawner -> playScene.enemyBuildings.add(new Graveyard(playScene, new Vector2I(x, y)));
+                        case Cannon -> playScene.playerBuildings.add(new Cannon(playScene, new Vector2I(x, y)));
+                    }
+                }
+            }
+        }
     }
 
     public void addSpecialty(MapSpecialty specialty) {
+        var newSpecials = new MapSpecialty[specialties.length + 1];
+        System.arraycopy(specialties, 0, newSpecials, 0, specialties.length);
+        newSpecials[specialties.length] = specialty;
+        specialties = newSpecials;
     }
 
     public void changeSize(int width, int height) {
@@ -73,15 +129,6 @@ public class Map implements Serializable {
         return height;
     }
 
-    public void updateFields(Vector<Enemy> enemies) {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-
-                getField(x, y).update(x, y, enemies);
-            }
-        }
-    }
-
     public void update(InputHandle ih, Camera camera, BiConsumer<Integer, Integer> onFieldClick) {
         var worldMousePos = GetScreenToWorld2D(GetMousePosition(), camera);
         if (!IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
@@ -109,7 +156,7 @@ public class Map implements Serializable {
             return;
         }
 
-        field.setType(type);
+        field.type = type;
 
         batchUpdate(x, y - 1, type, old);
         batchUpdate(x, y + 1, type, old);
@@ -127,7 +174,7 @@ public class Map implements Serializable {
                         if (selected instanceof FieldType) {
                             getField(x, y).type = (FieldType) selected;
                         } else {
-                            getField(x, y).setItem((ItemType) selected);
+                            getField(x, y).item = (BuildingType) selected;
                         }
                     }
                 }
@@ -176,5 +223,13 @@ public class Map implements Serializable {
             }
         }
         return point;
+    }
+
+    public int getGemReward() {
+        return gemReward;
+    }
+
+    public void setGemReward(int gemReward) {
+        this.gemReward = gemReward;
     }
 }

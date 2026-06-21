@@ -1,28 +1,25 @@
 package src.scenes;
 
-import src.menu.Menu;
 import src.ui.InputHandle;
 
-// Scene showing the lobby/menu area
-public class EditMenuScene implements SceneInterface {
-    Menu menu = new Menu();
-
+public class LossScene implements SceneInterface {
     @Override
     public void setup(SceneManager sceneManager) {
+
     }
 
     @Override
     public void update(SceneManager sceneManager, InputHandle inputHandle) {
-        menu.update(sceneManager, inputHandle);
+
     }
 
     @Override
     public void draw() {
-        menu.draw();
+
     }
 
     @Override
     public SceneInterface cloneScene() {
-        return new EditMenuScene();
+        return null;
     }
 }

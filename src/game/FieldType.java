@@ -45,9 +45,4 @@ public enum FieldType implements SelItemInterface, Serializable {
     public Raylib.Texture getTexture() {
         return this.texture;
     }
-
-    @Override
-    public int getId() {
-        return this.id;
-    }
 }

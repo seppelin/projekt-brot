@@ -1,6 +1,6 @@
 package src.edit;
 
-import src.game.ItemType;
+import src.game.BuildingType;
 import src.ui.SelItemInterface;
 
 // Enum for different edit modes
@@ -13,7 +13,7 @@ public enum EditSelectState {
     public SelItemInterface[] getItems() {
         return switch (this) {
             case FieldType, FillField -> src.game.FieldType.values();
-            case Building -> ItemType.values();
+            case Building -> BuildingType.values();
         };
     }
 }

@@ -6,36 +6,20 @@ import com.raylib.Raylib;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Vector;
 
 public class Field implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     public FieldType type;
-    private ItemType item;
+    public BuildingType item;
 
     public Field(FieldType type) {
         this.type = type;
     }
 
-    // Update field state (spawn enemies from spawner)
-    public void update(int x, int y, Vector<Enemy> enemies) {
-        if (item == ItemType.Spawner && Math.random() > 0.998) {
-            enemies.add(new Enemy(x, y));
-        }
-    }
-
     public boolean isWalkable() {
         return this.type.walkable;
-    }
-
-    public void setType(FieldType type) {
-        this.type = type;
-    }
-
-    public void setItem(ItemType item) {
-        this.item = item;
     }
 
     // Draw field and item on it

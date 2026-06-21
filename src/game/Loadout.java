@@ -25,6 +25,10 @@ public class Loadout implements Serializable {
         return loadout.gems;
     }
 
+    public static void addGems(int gems) {
+        loadout.gems += gems;
+    }
+
     public static SkinType[] getSkins() {
         return loadout.skins;
     }

@@ -52,7 +52,7 @@ public class Menu {
         }
         if (options[1].isInteracted()) {
             sm.pushScene(new MapSelectScene((mapName ->
-                    sm.changeScene(new PlayScene(MapLoader.getMap(mapName)))), false)
+                    sm.changeScene(PreGameScene.gameStart(MapLoader.getMap(mapName), mapName, false))), false)
             );
         }
         if (options[2].isInteracted()) {
