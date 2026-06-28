@@ -15,6 +15,7 @@ public class GameInfo implements UiInterface, LayoutInterface {
     int money;
     int round;
     int maxRounds;
+    int originalHash;
 
     public GameInfo(Map map, String name, boolean comp) {
         this.position = new Vector2I(0, 0);
@@ -23,6 +24,11 @@ public class GameInfo implements UiInterface, LayoutInterface {
         this.money = map.getRoundMoney()[0];
         this.round = 0;
         this.maxRounds = map.getRoundMoney().length;
+        originalHash = map.hashCode();
+    }
+
+    public int getOriginalHash() {
+        return originalHash;
     }
 
     public String getMapName() {

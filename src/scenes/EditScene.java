@@ -24,7 +24,7 @@ public class EditScene implements SceneInterface {
         this.map = map;
         this.mapName = mapName;
         this.editSelect = new EditSelect();
-        this.camera = new Camera(160, 160, 2);
+        this.camera = new Camera(map.getWidth() * 8, map.getHeight() * 8, 2);
         this.saveButton = new Button("save", 28);
         this.settings = new Button("settings", 28);
     }
@@ -53,6 +53,9 @@ public class EditScene implements SceneInterface {
         if (saveButton.isClicked()) {
             MapLoader.saveMap(this.mapName, map);
         }
+        if (settings.isClicked()) {
+            sm.pushScene(new MapSettings(map, mapName));
+        }
 
         camera.handleResize();
         camera.mouseMove(inputHandle);
@@ -64,8 +67,18 @@ public class EditScene implements SceneInterface {
     public void onMapFieldClick(Integer x, Integer y) {
         var sel = this.editSelect.selector.getSelected();
         switch (this.editSelect.state) {
-            case FieldType -> map.getField(x, y).type = (FieldType) sel;
-            case Building -> map.setBuilding(x, y, (BuildingType) sel);
+            case FieldType -> map.setField(x, y, (FieldType) sel);
+            case Building -> {
+                // quick hack to get mouse clicks only for buildings
+                if (Raylib.IsMouseButtonPressed(Raylib.MOUSE_BUTTON_RIGHT)) {
+                    var b = (BuildingType) sel;
+                    if (map.getField(x, y).building() == b) {
+                        map.setBuilding(x, y, null);
+                    } else {
+                        map.setBuilding(x, y, b);
+                    }
+                }
+            }
             case FillField -> map.batchUpdate(x, y, (FieldType) sel, null);
         }
     }

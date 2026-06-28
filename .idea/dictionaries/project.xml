@@ -6,7 +6,9 @@
       <w>distributer</w>
       <w>grassdark</w>
       <w>iface</w>
+      <w>jdbc</w>
       <w>opengl</w>
+      <w>pstmt</w>
     </words>
   </dictionary>
 </component>

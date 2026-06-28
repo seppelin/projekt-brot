@@ -7,5 +7,5 @@ public interface Target {
 
     public Raylib.Vector2 getPosition();
 
-    public void dealDamage(int damage);
+    public boolean dealDamage(int damage);
 }

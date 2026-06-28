@@ -1,11 +1,11 @@
 package src.game;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class Loadout implements Serializable {
     @Serial
     private static final long serialVersionUID = 3L;
-
     private static Loadout loadout;
 
     // Default player loadout values
@@ -27,6 +27,13 @@ public class Loadout implements Serializable {
 
     public static void addGems(int gems) {
         loadout.gems += gems;
+        save();
+    }
+
+    public static void addSkin(SkinType skin) {
+        loadout.skins = Arrays.copyOf(loadout.skins, loadout.skins.length + 1);
+        loadout.skins[loadout.skins.length - 1] = skin;
+        save();
     }
 
     public static SkinType[] getSkins() {
@@ -49,7 +56,7 @@ public class Loadout implements Serializable {
     }
 
     // Save loadout to file
-    private static void save() {
+    public static void save() {
         try (var out = new ObjectOutputStream(new FileOutputStream("resources/loadout.savedata"))) {
             out.writeObject(loadout);
         } catch (IOException e) {
@@ -57,15 +64,21 @@ public class Loadout implements Serializable {
         }
     }
 
-    public WeaponType getCurrentWeapon() {
-        return currentWeapon;
+    public static WeaponType getCurrentWeapon() {
+        return loadout.currentWeapon;
     }
 
-    public SkinType getCurrentSkin() {
-        return currentSkin;
+    public static SkinType getCurrentSkin() {
+        return loadout.currentSkin;
     }
 
-    public AbilityType getCurrentAbility() {
-        return currentAbility;
+    public static AbilityType getCurrentAbility() {
+        return loadout.currentAbility;
+    }
+
+    public static void setSkin(SkinType skin) {
+        if (Arrays.asList(loadout.skins).contains(skin)) {
+            loadout.currentSkin = skin;
+        }
     }
 }

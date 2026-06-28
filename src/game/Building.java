@@ -38,10 +38,14 @@ public abstract class Building implements Target {
     }
 
     @Override
-    public void dealDamage(int damage) {
+    public boolean dealDamage(int damage) {
         health -= damage;
         if (health <= 0) {
+            if (existing()) {
+                return true;
+            }
             exists = false;
         }
+        return false;
     }
 }

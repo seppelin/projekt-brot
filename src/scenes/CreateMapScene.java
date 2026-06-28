@@ -6,11 +6,13 @@ import src.game.Map;
 import src.math.Vector2I;
 import src.ui.*;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class CreateMapScene implements SceneInterface {
     TextInput name = new TextInput(20, 32);
     Consumer<String> onSelect;
+    ArrayList<String> existingMaps;
 
     public CreateMapScene(Consumer<String> onSelect) {
         this.name.setSelected(true);
@@ -19,6 +21,7 @@ public class CreateMapScene implements SceneInterface {
 
     @Override
     public void setup(SceneManager sceneManager) {
+        existingMaps = MapLoader.getMapList();
         var layout = new AlignLayout(1, Align.Middle, new Vector2I(10, 10));
         {
             var label = new ImageUi(UiHelper.textTexture("Enter map name:", 28, Colors.BLACK));
@@ -30,6 +33,7 @@ public class CreateMapScene implements SceneInterface {
             sceneManager.addUiElement(name);
         }
         sceneManager.setRootLayout(layout);
+        name.setValidator(text -> !existingMaps.contains(text));
     }
 
     @Override

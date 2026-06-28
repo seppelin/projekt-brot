@@ -8,6 +8,7 @@ import java.util.List;
 
 // Layout that aligns items in a direction (horizontal or vertical)
 public class AlignLayout implements LayoutInterface {
+    public float spaceGreed = 1;
     // Direction: 0=horizontal (x), 1=vertical (y)
     RectangleI rect;
     int direction;
@@ -23,6 +24,17 @@ public class AlignLayout implements LayoutInterface {
         this.direction = direction;
         this.crossAlign = crossAlign;
         this.items = new ArrayList<>();
+    }
+
+    public void clear() {
+        this.items.clear();
+    }
+
+    public void prepend(LayoutInterface e, Align align) {
+        if (e == this) {
+            throw new IllegalArgumentException("Cannot add LayoutInterface to itself");
+        }
+        items.addFirst(new AlignItem(e, align));
     }
 
     // Add element to layout with alignment
@@ -155,5 +167,10 @@ public class AlignLayout implements LayoutInterface {
             min.set(direction ^ 1, Math.max(min.get(direction ^ 1), itemMin.get(direction ^ 1) + 2 * padding.get(direction ^ 1)));
         }
         return min;
+    }
+
+    @Override
+    public float extraSpaceGreed() {
+        return spaceGreed;
     }
 }

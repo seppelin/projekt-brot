@@ -32,6 +32,11 @@ public class SceneManager {
         sceneManager.run();
     }
 
+    public void goToMenu() {
+        this.sceneStack.clear();
+        this.changeScene(new MenuScene());
+    }
+
     // Main game loop
     private void run() {
         while (!quit && !Raylib.WindowShouldClose()) {

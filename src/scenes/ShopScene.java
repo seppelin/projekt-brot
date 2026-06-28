@@ -30,7 +30,9 @@ public class ShopScene implements SceneInterface {
 
     @Override
     public void draw() {
-        Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), Raylib.GetScreenHeight(), shopBackground);
+        var w = Raylib.GetScreenWidth();
+        var h = Raylib.GetScreenHeight();
+        Raylib.DrawRectangle(0, 0, w, h, shopBackground);
     }
 
     @Override

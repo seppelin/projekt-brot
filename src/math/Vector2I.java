@@ -56,4 +56,12 @@ public class Vector2I {
     public Raylib.Vector2 rl() {
         return Helpers.newVector2(x, y);
     }
+
+    public Raylib.Rectangle centeredRect(Raylib.Vector2 pos) {
+        return Helpers.newRectangle(pos.x() - (float) x / 2, pos.y() - (float) y / 2, x, y);
+    }
+
+    public boolean equals(Vector2I other) {
+        return x == other.x && y == other.y;
+    }
 }

@@ -46,6 +46,10 @@ public class Selector implements UiInterface, LayoutInterface {
         return items[selected];
     }
 
+    public void setSelected(int selected) {
+        this.selected = selected;
+    }
+
     // Get local box for item at index
     private RectangleI getLocalBox(int i) {
         var x = i % this.itemsPerRow;

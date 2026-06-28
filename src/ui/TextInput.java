@@ -5,25 +5,62 @@ import com.raylib.Raylib;
 import src.math.RectangleI;
 import src.math.Vector2I;
 
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 // Text input field UI element
 public class TextInput implements UiInterface, LayoutInterface {
+    Predicate<String> validator;
+    Consumer<String> onEnter;
+
+    String shadowText;
     RectangleI rect;
     int maxLen;
     int fontSize;
     boolean isSelected;
     String text;
     boolean entered;
+    boolean valid;
 
-    public TextInput(int maxLen, int fontSize) {
+    public TextInput(int maxLen, int fontSize, String shadowText) {
         var height = fontSize + 8;
-        var test = "W".repeat(maxLen);
-        var width = Raylib.MeasureText(test, fontSize) + 8;
+        var test = "m".repeat(Math.max(maxLen, shadowText.length()));
+        var width = Raylib.MeasureText(test, fontSize) + 16;
         this.rect = new RectangleI(0, 0, width, height);
         this.maxLen = maxLen;
         this.fontSize = fontSize;
         this.isSelected = false;
         this.text = "";
         this.entered = false;
+        this.valid = true;
+        this.shadowText = shadowText;
+    }
+
+    public TextInput(int maxLen, int fontSize) {
+        var height = fontSize + 8;
+        var test = "m".repeat(maxLen);
+        var width = Raylib.MeasureText(test, fontSize) + 16;
+        this.rect = new RectangleI(0, 0, width, height);
+        this.maxLen = maxLen;
+        this.fontSize = fontSize;
+        this.isSelected = false;
+        this.text = "";
+        this.entered = false;
+        this.valid = true;
+        this.shadowText = "";
+    }
+
+    public void setShadowText(String txt) {
+        this.shadowText = txt;
+    }
+
+    public void setValidator(Predicate<String> validator) {
+        this.validator = validator;
+        this.valid = validator.test(this.text);
+    }
+
+    public void setOnEnter(Consumer<String> onEnter) {
+        this.onEnter = onEnter;
     }
 
     // Clear input field
@@ -31,6 +68,13 @@ public class TextInput implements UiInterface, LayoutInterface {
         this.text = "";
         this.isSelected = false;
         this.entered = false;
+        validate();
+    }
+
+    private void validate() {
+        if (validator != null) {
+            this.valid = validator.test(this.text);
+        }
     }
 
     public boolean isEntered() {
@@ -86,12 +130,18 @@ public class TextInput implements UiInterface, LayoutInterface {
             char c = (char) Raylib.GetCharPressed();
             if (c != 0 && text.length() < maxLen) {
                 text += c;
-            }
-            if (Raylib.IsKeyPressed(Raylib.KEY_ENTER)) {
-                this.entered = true;
+                validate();
             }
             if (Raylib.IsKeyPressed(Raylib.KEY_BACKSPACE) && !text.isEmpty()) {
                 text = text.substring(0, text.length() - 1);
+                validate();
+            }
+            if (Raylib.IsKeyPressed(Raylib.KEY_ENTER) && valid) {
+                this.entered = true;
+                if (this.onEnter != null) {
+                    onEnter.accept(this.text);
+                    this.resetInput();
+                }
             }
         }
     }
@@ -99,7 +149,15 @@ public class TextInput implements UiInterface, LayoutInterface {
     @Override
     public void draw() {
         Raylib.DrawRectangleRec(rect.rl(), Colors.WHITE);
-        Raylib.DrawText(text, rect.pos.x + 4, rect.pos.y + 4, fontSize, Colors.BLACK);
-        Raylib.DrawRectangleLinesEx(rect.rl(), 2, isSelected ? Colors.SKYBLUE : Colors.BLACK);
+        if (text.isEmpty() && !shadowText.isEmpty()) {
+            Raylib.DrawText(shadowText, rect.pos.x + 4, rect.pos.y + 4, fontSize, Colors.GRAY);
+        } else {
+            Raylib.DrawText(text, rect.pos.x + 4, rect.pos.y + 4, fontSize, Colors.BLACK);
+        }
+        var color = isSelected ? Colors.SKYBLUE : Colors.BLACK;
+        if (isSelected && !valid) {
+            color = Colors.RED;
+        }
+        Raylib.DrawRectangleLinesEx(rect.rl(), 2, color);
     }
 }
