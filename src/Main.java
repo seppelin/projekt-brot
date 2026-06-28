@@ -17,7 +17,6 @@ public class Main {
 
         DB.asyncInit();
 
-
         // Initialize window
         InitWindow(1600, 900, "Demo");
         // Disable default exit key (ESC)

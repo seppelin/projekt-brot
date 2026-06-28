@@ -37,6 +37,19 @@ public class DB {
                 });
     }
 
+    public static void init() {
+        var envs = loadEnv(".env");
+        // Enforce SSL, but skip checking if the certificate is self-signed
+
+        var user = envs.get("DB_USER");
+        var pass = envs.get("DB_PASSWORD");
+        try {
+            conn = DriverManager.getConnection(url, user, pass);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void printMatchEntries() {
         try {
             Statement stmt = conn.createStatement();

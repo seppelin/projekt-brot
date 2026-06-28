@@ -4,6 +4,7 @@
     <root id="archive" name="rl-projekt-brot.jar">
       <element id="module-output" name="rl-projekt-brot" />
       <element id="extracted-dir" path="$PROJECT_DIR$/jaylib-5.5.0-2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/mysql-connector-j-9.7.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
